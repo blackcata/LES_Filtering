@@ -24,7 +24,7 @@
 
               dir_name = 'RESULT'
               !----------------------------------------------------------!
-              !              Outputs for U(Mean velocity)
+              !            Outputs for U_Fil(Filtered velocity)
               !----------------------------------------------------------!
               file_name = '/U_filtered.plt'
               path_name = TRIM(dir_name)//TRIM(file_name)

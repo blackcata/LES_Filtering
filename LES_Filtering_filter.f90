@@ -26,9 +26,10 @@
           WRITE(*,*) '----------------------------------------------------'
           WRITE(*,*) '             FILTERING PROCESS STARTED              '
           CALL CPU_TIME(time_sta)
-
-          DO k = 1,Nz
-            DO j = 1,Ny
+          
+          !$OMP PARALLEL DO private(k,i,k_loc,i_loc,i_tmp,k_tmp,G_tot)
+          DO j = 1,Ny
+            DO k = 1,Nz
               DO i = 1,Nx
                 G_tot = 0.0
                 DO k_loc = -Nz/2,Nz/2
@@ -61,6 +62,7 @@
               END DO
             END DO
           END DO
+          !OMP END PARALLEL
 
           CALL CPU_TIME(time_end)
           WRITE(*,*) '              FILTERING PROCESS ENDED               '
