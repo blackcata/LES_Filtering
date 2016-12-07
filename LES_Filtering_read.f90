@@ -50,5 +50,5 @@
           dx  = X(2) - X(1)
           dz  = Z(2) - Z(1)
           Del = FW*sqrt(dx * dz)
-          
+
         END SUBROUTINE READ_DNS

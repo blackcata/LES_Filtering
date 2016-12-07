@@ -11,7 +11,8 @@
         SUBROUTINE SETUP
 
             USE LES_FILTERING_module,                                           &
-                ONLY : Nx, Ny, Nz, dx, dz, FW, file_name, dir_name, path_name
+                ONLY : Nx, Ny, Nz, dx, dz, FW, pi,                              &
+                       file_name, dir_name, path_name
 
             USE LES_FILTERING_module,                                           &
                 ONLY : X, Y, Z, dy, U, V, W, U_Fil, V_Fil, W_Fil
@@ -19,6 +20,8 @@
             IMPLICIT NONE
             INTEGER :: i,j,k
 
+            pi = atan(1.0)*4
+            
             !-----------------------------------------------------------!
             !                     Make Result folder
             !-----------------------------------------------------------!
