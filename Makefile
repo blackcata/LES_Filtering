@@ -16,3 +16,4 @@ $(TARGET) : $(OBJECT)
 
 clean :
 	rm -f *.o
+	rm LES_Filtering les_filtering_module.mod

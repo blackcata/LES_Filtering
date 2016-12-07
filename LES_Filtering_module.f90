@@ -16,6 +16,6 @@
           CHARACTER(LEN=65) :: file_name, dir_name, path_name
 
           REAL(KIND=8),DIMENSION(:),ALLOCATABLE :: X,Y,Z
-          REAL(KIND=8),DIMENSION(:,:,:),ALLOCATABLE :: U,V,W
+          REAL(KIND=8),DIMENSION(:,:,:),ALLOCATABLE :: U,V,W,U_Fil,V_Fil,W_Fil
 
         END MODULE
