@@ -11,10 +11,10 @@
         SUBROUTINE SETUP
 
             USE LES_FILTERING_module,                                           &
-                ONLY : Nx, Ny, Nz, file_name, dir_name, path_name
+                ONLY : Nx, Ny, Nz, dx, dz, FW, file_name, dir_name, path_name
 
             USE LES_FILTERING_module,                                           &
-                ONLY : X, Y, Z, dx, dy, dz, U, V, W, U_Fil, V_Fil, W_Fil
+                ONLY : X, Y, Z, dy, U, V, W, U_Fil, V_Fil, W_Fil
 
             IMPLICIT NONE
             INTEGER :: i,j,k
@@ -34,10 +34,12 @@
             Ny = 257
             Nz = 288
 
+            FW = 4 ! Filter width constant
+
             !-----------------------------------------------------------!
             !                   Allocate variables
             !-----------------------------------------------------------!
-            ALLOCATE( X(1:Nx),Y(1:Ny),Z(1:Nz),dx(1:Nx-1),dy(1:Ny-1),dz(1:Nz-1) )
+            ALLOCATE( X(1:Nx),Y(1:Ny),Z(1:Nz),dy(1:Ny-1) )
             ALLOCATE( U(1:Nx,1:Ny,1:Nz), V(1:Nx,1:Ny,1:Nz), W(1:Nx,1:Ny,1:Nz) )
             ALLOCATE( U_Fil(1:Nx,1:Ny,1:Nz), V_Fil(1:Nx,1:Ny,1:Nz),             &
                                              W_Fil(1:Nx,1:Ny,1:Nz) )
@@ -49,9 +51,7 @@
             Y(1:Ny) = 0.0
             Z(1:Nz) = 0.0
 
-            dx(1:Nx-1) = 0.0
             dy(1:Ny-1) = 0.0
-            dz(1:Nz-1) = 0.0
 
             U(1:Nx,1:Ny,1:Nz) = 0.0
             V(1:Nx,1:Ny,1:Nz) = 0.0
