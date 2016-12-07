@@ -9,11 +9,11 @@
 !-----------------------------------------------------------------------------------!
 
         SUBROUTINE READ_DNS
-          USE LES_FILTERING_module,                                           &
-              ONLY : Nx, Ny, Nz, dx, dz, Del, FW,                             &
+          USE LES_FILTERING_module,                                             &
+              ONLY : Nx, Ny, Nz, dx, dz, Del, FW,                               &
                      file_name, dir_name, path_name
 
-          USE LES_FILTERING_module,                                           &
+          USE LES_FILTERING_module,                                             &
               ONLY : X, Y, Z, U, V, W, dy
 
           IMPLICIT NONE
