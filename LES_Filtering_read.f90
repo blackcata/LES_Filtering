@@ -13,7 +13,7 @@
               ONLY : Nx, Ny, Nz, file_name, dir_name, path_name
 
           USE LES_FILTERING_module,                                           &
-              ONLY : X, Y, Z, U, V, W
+              ONLY : X, Y, Z, U, V, W, dx, dy, dz
 
           IMPLICIT NONE
 
@@ -41,5 +41,17 @@
           END DO
 
           CLOSE(100)
+
+          DO i = 1,Nx-1
+            dx(i) = X(i+1) - X(i)
+          END DO
+
+          DO j = 1,Ny-1
+            dy(j) = Y(j+1) - Y(j)
+          END DO
+
+          DO k = 1,Nz-1
+            dz(k) = Z(k+1) - Z(k)
+          END DO
 
         END SUBROUTINE READ_DNS

@@ -18,10 +18,6 @@
           REAL(KIND=8) :: time_sta, time_end
 
           CALL SETUP
-          CALL CPU_TIME(time_sta)
           CALL READ_DNS
-          CALL CPU_TIME(time_end)
-          
-          WRITE(*,*) 'Total Reading time : ',time_end - time_sta,' s'
 
         END PROGRAM LES_FILTERING
