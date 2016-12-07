@@ -26,22 +26,19 @@
 
           OPEN(100,FILE=path_name,FORM='FORMATTED',STATUS='OLD')
           READ(100,*) header
-          print*,header
           READ(100,*) header
-          print*,header
 
           DO k = 1,Nz
             DO j = 1,Ny
               DO i = 1,Nx
                 READ(100,*) tmp_x, tmp_y, tmp_z, U(i,j,k), V(i,j,k), W(i,j,k)
-                IF (j==1 .AND. k==1) X(i) = tmp_x
-                IF (i==1 .AND. k==1) Y(j) = tmp_y
-                IF (i==1 .AND. j==1) Z(k) = tmp_z
+                IF (j==1 .AND. k==1) X(i)      = tmp_x
+                IF (i==1 .AND. k==1) Y(Ny-j+1) = tmp_y
+                IF (i==1 .AND. j==1) Z(k)      = tmp_z
               END DO
             END DO
           END DO
 
           CLOSE(100)
-
 
         END SUBROUTINE READ_DNS
