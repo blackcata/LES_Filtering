@@ -19,8 +19,12 @@
           IMPLICIT NONE
 
           INTEGER :: i,j,k
-          REAL(KIND=8) :: tmp_x, tmp_y, tmp_z
+          REAL(KIND=8) :: tmp_x, tmp_y, tmp_z, time_sta, time_end
           CHARACTER(20) :: header
+
+          WRITE(*,*) '----------------------------------------------------'
+          WRITE(*,*) '              READING PROCESS STARTED               '
+          CALL CPU_TIME(time_sta)
 
           dir_name = 'Data'
           path_name = TRIM(dir_name)//'/'//TRIM(file_name)
@@ -50,5 +54,11 @@
           dx  = X(2) - X(1)
           dz  = Z(2) - Z(1)
           Del = FW*sqrt(dx * dz)
+
+          CALL CPU_TIME(time_end)
+          WRITE(*,*) '            READING PROCESS IS COMPLETED            '
+          WRITE(*,*) '  Total Reading time : ',time_end - time_sta,' s'
+          WRITE(*,*) '----------------------------------------------------'
+          WRITE(*,*) ''
 
         END SUBROUTINE READ_DNS

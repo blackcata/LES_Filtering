@@ -19,5 +19,6 @@
 
           CALL SETUP
           CALL READ_DNS
+          CALL FILTER
 
         END PROGRAM LES_FILTERING

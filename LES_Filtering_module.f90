@@ -19,9 +19,12 @@
           REAL(KIND=8),DIMENSION(:,:,:),ALLOCATABLE :: U,V,W,U_Fil,V_Fil,W_Fil
 
           CONTAINS
-            REAL(KIND=8) FUNCTION G(Del,r)
-
-              REAL(KIND=8) :: Del, r
+            !------------------------------------------------------!
+            !                Gaussian Filter Function
+            !------------------------------------------------------!
+            FUNCTION G(Del,r)
+              REAL(KIND=8) :: G
+              REAL(KIND=8),INTENT(IN) :: Del, r
 
               G = sqrt(6/(pi*Del**2))*exp(-6*(r**2/Del**2))
 
