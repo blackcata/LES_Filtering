@@ -28,7 +28,9 @@
               !----------------------------------------------------------!
               file_name = '/U_filtered.plt'
               path_name = TRIM(dir_name)//TRIM(file_name)
-              OPEN(100,FILE=file_name,FORM='FORMATTED',POSITION='APPEND')
+              OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
+              WRITE(100,"(3(A,I3,2X))")' ZONE  I = ',Nx,' J = ',Ny, ' K = ', Nz
+              WRITE(100,*) 'VARIABLES = X,Y,Z,U_fil,V_Fil,W_Fil'
               DO k = 1,Nz
                 DO j = 1,Ny
                   DO i = 1,Nx
@@ -39,7 +41,8 @@
               END DO
               CLOSE(100)
 
-              WRITE(*,*) '            WRITING PROCESS IS COMPLETED            '
+              CALL CPU_TIME(time_end)
+              WRITE(*,*) '           WRITING PROCESS IS COMPLETED            '
               WRITE(*,*) '  Total Writing time : ',time_end - time_sta,' s'
               WRITE(*,*) '----------------------------------------------------'
               WRITE(*,*) ''

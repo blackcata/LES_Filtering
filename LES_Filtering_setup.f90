@@ -21,14 +21,14 @@
             INTEGER :: i,j,k
 
             pi = atan(1.0)*4
-            
+
             !-----------------------------------------------------------!
             !                     Make Result folder
             !-----------------------------------------------------------!
             file_name = 'instantaneous_velocity_field_re644.plt'
             dir_name  = 'RESULT'
-            CALL SYSTEM('mkdir '//TRIM(path_name))
-            CALL SYSTEM('rm -rf ./'//TRIM(path_name)//'/*')
+            CALL SYSTEM('mkdir '//TRIM(dir_name))
+            CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/*')
 
             !-----------------------------------------------------------!
             !               Constants for LES filtering
