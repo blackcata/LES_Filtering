@@ -1,4 +1,4 @@
-!-----------------------------------------------------------------------------------!
+!------------------------------------------------------------------------------!
 !
 !   PROGRAM : LES_Filtering_read.f90
 !
@@ -6,11 +6,15 @@
 !
 !                                                             2016.12.07 K.Noh
 !
-!-----------------------------------------------------------------------------------!
+!------------------------------------------------------------------------------!
 
         SUBROUTINE READ_DNS
+
           USE LES_FILTERING_module,                                             &
-              ONLY : Nx, Ny, Nz, dx, dz, Del, FW,                               &
+              ONLY : G
+
+          USE LES_FILTERING_module,                                             &
+              ONLY : Nx, Ny, Nz, dx, dz, Del, FW, tol, Nx_fil, Nz_fil,          &
                      file_name, dir_name, path_name
 
           USE LES_FILTERING_module,                                             &
@@ -18,8 +22,8 @@
 
           IMPLICIT NONE
 
-          INTEGER :: i,j,k
-          REAL(KIND=8) :: tmp_x, tmp_y, tmp_z, time_sta, time_end
+          INTEGER :: i,j,k,it
+          REAL(KIND=8) :: tmp_x, tmp_y, tmp_z, time_sta, time_end, dg, r
           CHARACTER(20) :: header
 
           WRITE(*,*) '----------------------------------------------------'
@@ -54,6 +58,19 @@
           dx  = X(2) - X(1)
           dz  = Z(2) - Z(1)
           Del = FW*sqrt(dx * dz)
+
+          !--------------------------------------------------------------------!
+          !       Determining the number of filtering node in x,z dirctions    !
+          !--------------------------------------------------------------------!
+          DO it = 1,1000
+            r = REAL(it,KIND=8)
+            dg = G(Del,r) - G(Del,r+1)
+            IF (dg < tol) THEN
+              Nx_fil = CEILING(REAL(it,KIND=8)/(2*dx))
+              Nz_fil = CEILING(REAL(it,KIND=8)/(2*dz))
+              EXIT
+            END IF
+          END DO
 
           CALL CPU_TIME(time_end)
           WRITE(*,*) '            READING PROCESS IS COMPLETED            '

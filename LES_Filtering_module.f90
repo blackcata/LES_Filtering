@@ -1,4 +1,4 @@
-!-----------------------------------------------------------------------------------!
+!------------------------------------------------------------------------------!
 !
 !   PROGRAM : LES_Filtering_module.f90
 !
@@ -6,22 +6,22 @@
 !
 !                                                             2016.12.07 K.Noh
 !
-!-----------------------------------------------------------------------------------!
+!------------------------------------------------------------------------------!
 
         MODULE LES_FILTERING_module
 
           IMPLICIT NONE
-          INTEGER :: Nx, Ny, Nz
-          REAL(KIND=8) :: Del,dx,dz,FW,pi
+          INTEGER :: Nx, Ny, Nz, Nx_fil, Nz_fil
+          REAL(KIND=8) :: Del,dx,dz,FW,pi,tol
           CHARACTER(LEN=65) :: file_name, dir_name, path_name
 
           REAL(KIND=8),DIMENSION(:),ALLOCATABLE :: X,Y,Z,dy
           REAL(KIND=8),DIMENSION(:,:,:),ALLOCATABLE :: U,V,W,U_Fil,V_Fil,W_Fil
 
           CONTAINS
-            !------------------------------------------------------!
-            !                Gaussian Filter Function
-            !------------------------------------------------------!
+            !------------------------------------------------------------------!
+            !                     Gaussian Filter Function                     !
+            !------------------------------------------------------------------!
             FUNCTION G(Del,r)
               REAL(KIND=8) :: G
               REAL(KIND=8),INTENT(IN) :: Del, r

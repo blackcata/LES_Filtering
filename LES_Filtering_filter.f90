@@ -1,4 +1,4 @@
-!-----------------------------------------------------------------------------------!
+!------------------------------------------------------------------------------!
 !
 !   PROGRAM : LES_Filtering_filter.f90
 !
@@ -7,33 +7,33 @@
 !
 !                                                             2016.12.07 K.Noh
 !
-!-----------------------------------------------------------------------------------!
+!------------------------------------------------------------------------------!
 
         SUBROUTINE FILTER
           USE LES_FILTERING_module,                                             &
               ONLY : G
 
           USE LES_FILTERING_module,                                             &
-              ONLY : Nx, Ny, Nz, dx, dz, Del
+              ONLY : Nx, Ny, Nz, dx, dz, Del, Nx_fil, Nz_fil
 
           USE LES_FILTERING_module,                                             &
               ONLY : X, Y, Z, U, V, W, dy, U_Fil, V_Fil, W_Fil
 
           IMPLICIT NONE
-          INTEGER :: i,j,k, i_loc, k_loc, i_tmp, k_tmp
+          INTEGER :: i,j,k, i_loc, k_loc, i_tmp, k_tmp, myid, OMP_GET_THREAD_NUM
           REAL(KIND=8) :: r, G_tot, time_sta, time_end
 
           WRITE(*,*) '----------------------------------------------------'
           WRITE(*,*) '             FILTERING PROCESS STARTED              '
           CALL CPU_TIME(time_sta)
-          
-          !$OMP PARALLEL DO private(k,i,k_loc,i_loc,i_tmp,k_tmp,G_tot)
+
+          !$OMP PARALLEL DO private(k,i,k_loc,i_loc,i_tmp,k_tmp,G_tot,myid)
           DO j = 1,Ny
             DO k = 1,Nz
               DO i = 1,Nx
                 G_tot = 0.0
-                DO k_loc = -Nz/2,Nz/2
-                  DO i_loc = -Nx/2,Nx/2
+                DO k_loc = -Nz_fil,Nz_fil!-Nz/2,Nz/2
+                  DO i_loc = -Nx_fil,Nx_fil!-Nx/2,Nx/2
                     i_tmp = i + i_loc
                     k_tmp = k + k_loc
 
@@ -59,6 +59,9 @@
                 U_Fil(i,j,k) = U_Fil(i,j,k)/G_tot
                 V_Fil(i,j,k) = V_Fil(i,j,k)/G_tot
                 W_Fil(i,j,k) = W_Fil(i,j,k)/G_tot
+
+                ! WRITE(*,"(3(I10),3(F15.9))")                                  &
+                !                i,j,k,U_Fil(i,j,k),V_Fil(i,j,k),W_Fil(i,j,k)
               END DO
             END DO
           END DO
