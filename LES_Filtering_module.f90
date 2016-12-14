@@ -30,4 +30,25 @@
 
             END FUNCTION G
 
+            !------------------------------------------------------------------!
+            !                     Finding Y point Function                     !
+            !------------------------------------------------------------------!
+            FUNCTION J_det(y_val)
+              INTEGER :: j, J_det
+              REAL(KIND=8),INTENT(IN) :: y_val
+
+              DO j = 1,Ny
+                IF (Y(j)>y_val) THEN
+                  IF ( (Y(j) - y_val) < (y_val - Y(j-1))) THEN
+                    J_det = j
+                  ELSE
+                    J_det = j-1
+                  END IF
+                  EXIT
+                END IF
+
+              END DO
+
+            END FUNCTION J_det
+
         END MODULE

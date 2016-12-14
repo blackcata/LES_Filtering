@@ -25,8 +25,8 @@
 
           WRITE(*,*) '----------------------------------------------------'
           WRITE(*,*) '             FILTERING PROCESS STARTED              '
-          WRITE(*,"(2X,A9,I2,1X,A9,I2)")"Nx : ",Nx,"Nz : ",Nz
-          WRITE(*,"(2X,A9,I2,1X,A9,I2)")"Nx_fil : ",Nx_fil,"Nz_fil : ",Nz_fil
+          WRITE(*,"(7X,A9,I4,1X,A9,I4)")"Nx : ",Nx,"Nz : ",Nz
+          WRITE(*,"(7X,A9,I4,1X,A9,I4)")"Nx_fil : ",Nx_fil,"Nz_fil : ",Nz_fil
           CALL CPU_TIME(time_sta)
 
           !$OMP PARALLEL DO private(k,i,k_loc,i_loc,i_tmp,k_tmp,G_tot,myid)

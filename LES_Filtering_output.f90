@@ -23,9 +23,10 @@
               CALL CPU_TIME(time_sta)
 
               dir_name = 'RESULT'
-              !----------------------------------------------------------!
-              !            Outputs for U_Fil(Filtered velocity)
-              !----------------------------------------------------------!
+
+              !----------------------------------------------------------------!
+              !                Outputs for U_Fil(Filtered velocity)
+              !----------------------------------------------------------------!
               file_name = '/U_filtered.plt'
               path_name = TRIM(dir_name)//TRIM(file_name)
               OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
