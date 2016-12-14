@@ -20,7 +20,7 @@
               ONLY : X, Y, Z, U, V, W, dy, U_Fil, V_Fil, W_Fil
 
           IMPLICIT NONE
-          INTEGER :: i,j,k, i_loc, k_loc, i_tmp, k_tmp, myid, OMP_GET_THREAD_NUM
+          INTEGER :: i,j,k, i_loc, k_loc, i_tmp, k_tmp
           REAL(KIND=8) :: r, G_tot, time_sta, time_end
 
           WRITE(*,*) '----------------------------------------------------'
@@ -29,13 +29,13 @@
           WRITE(*,"(7X,A9,I4,1X,A9,I4)")"Nx_fil : ",Nx_fil,"Nz_fil : ",Nz_fil
           CALL CPU_TIME(time_sta)
 
-          !$OMP PARALLEL DO private(k,i,k_loc,i_loc,i_tmp,k_tmp,G_tot,myid)
+          !$OMP PARALLEL DO private(k,i,k_loc,i_loc,i_tmp,k_tmp,G_tot,r)
           DO j = 1,Ny
             DO k = 1,Nz
               DO i = 1,Nx
                 G_tot = 0.0
-                DO k_loc = -Nz_fil,Nz_fil!-Nz/2,Nz/2
-                  DO i_loc = -Nx_fil,Nx_fil!-Nx/2,Nx/2
+                DO k_loc = -Nz_fil,Nz_fil
+                  DO i_loc = -Nx_fil,Nx_fil
                     i_tmp = i + i_loc
                     k_tmp = k + k_loc
 

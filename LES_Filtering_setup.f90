@@ -28,7 +28,7 @@
             file_name = 'instantaneous_velocity_field_re644.plt'
             dir_name  = 'RESULT'
             CALL SYSTEM('mkdir '//TRIM(dir_name))
-            CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/*')
+            CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/*.plt')
 
             !------------------------------------------------------------------!
             !                    Constants for LES filtering                   !
