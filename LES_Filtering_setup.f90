@@ -37,7 +37,7 @@
             Ny = 257
             Nz = 288
 
-            FW = 4 ! Filter width constant
+            FW = 4     ! Filter width constant
             tol = 1e-8 ! Tolerance for the number of nodes in x,z directions
 
             !------------------------------------------------------------------!
