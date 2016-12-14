@@ -17,6 +17,7 @@
 
           REAL(KIND=8),DIMENSION(:),ALLOCATABLE :: X,Y,Z,dy
           REAL(KIND=8),DIMENSION(:,:,:),ALLOCATABLE :: U,V,W,U_Fil,V_Fil,W_Fil
+          REAL(KIND=8),DIMENSION(:,:,:,:,:),ALLOCATABLE :: Resi_T
 
           CONTAINS
             !------------------------------------------------------------------!
@@ -50,5 +51,41 @@
               END DO
 
             END FUNCTION J_det
+
+            !------------------------------------------------------------------!
+            !                             U Selection                          !
+            !------------------------------------------------------------------!
+            FUNCTION FIND_U(i_tmp,j,k_tmp,v_i)
+              INTEGER,INTENT(IN) :: i_tmp,j,k_tmp,v_i
+              REAL(KIND=8) :: FIND_U
+
+              SELECT CASE(v_i)
+                CASE(1)
+                  FIND_U = U(i_tmp,j,k_tmp)
+                CASE(2)
+                  FIND_U = V(i_tmp,j,k_tmp)
+                CASE(3)
+                  FIND_U = W(i_tmp,j,k_tmp)
+              END SELECT
+
+            END FUNCTION FIND_U
+
+            !------------------------------------------------------------------!
+            !                        Filtered U Selection                      !
+            !------------------------------------------------------------------!
+            FUNCTION FIND_U_Fil(i,j,k,v_i)
+              INTEGER,INTENT(IN) :: i,j,k,v_i
+              REAL(KIND=8) :: FIND_U_Fil
+
+              SELECT CASE(v_i)
+                CASE(1)
+                  FIND_U_Fil = U_Fil(i,j,k)
+                CASE(2)
+                  FIND_U_Fil = V_Fil(i,j,k)
+                CASE(3)
+                  FIND_U_Fil = W_Fil(i,j,k)
+              END SELECT
+
+            END FUNCTION FIND_U_Fil
 
         END MODULE

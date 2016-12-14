@@ -15,7 +15,7 @@
                        file_name, dir_name, path_name
 
             USE LES_FILTERING_module,                                           &
-                ONLY : X, Y, Z, dy, U, V, W, U_Fil, V_Fil, W_Fil
+                ONLY : X, Y, Z, dy, U, V, W, U_Fil, V_Fil, W_Fil, Resi_T
 
             IMPLICIT NONE
             INTEGER :: i,j,k
@@ -47,6 +47,7 @@
             ALLOCATE( U(1:Nx,1:Ny,1:Nz), V(1:Nx,1:Ny,1:Nz), W(1:Nx,1:Ny,1:Nz) )
             ALLOCATE( U_Fil(1:Nx,1:Ny,1:Nz), V_Fil(1:Nx,1:Ny,1:Nz),             &
                                              W_Fil(1:Nx,1:Ny,1:Nz) )
+            ALLOCATE( Resi_T(1:Nx,1:Ny,1:Nz,1:3,1:3) )
 
             !------------------------------------------------------------------!
             !                         Initial Conditions                       !
@@ -64,5 +65,7 @@
             U_Fil(1:Nx,1:Ny,1:Nz) = 0.0
             V_Fil(1:Nx,1:Ny,1:Nz) = 0.0
             W_Fil(1:Nx,1:Ny,1:Nz) = 0.0
+
+            Resi_T(1:Nx,1:Ny,1:Nz,1:3,1:3) = 0.0
 
         END SUBROUTINE SETUP

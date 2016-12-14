@@ -15,7 +15,7 @@
                   ONLY : Nx, Ny, Nz, file_name, dir_name, path_name
 
               USE LES_FILTERING_module,                                         &
-                  ONLY : X, Y, Z, U, V, W, U_Fil, V_Fil, W_Fil, dy
+                  ONLY : X, Y, Z, U, V, W, U_Fil, V_Fil, W_Fil, dy, Resi_T
 
               IMPLICIT NONE
               INTEGER :: i,j,k,it,J_loc
@@ -74,7 +74,7 @@
               CLOSE(100)
 
               !----------------------------------------------------------------!
-              !               Outputs for instaneous U at Y+ = 5               !
+              !            Outputs for instaneous U at Y+ = 5,30,200           !
               !----------------------------------------------------------------!
               YP = [5,30,200]
 
@@ -97,6 +97,31 @@
 
                 CLOSE(100)
               END DO
+
+              !----------------------------------------------------------------!
+              !              Outputs for Residual at Y+ = 5,30,200             !
+              !----------------------------------------------------------------!
+              YP = [5,30,200]
+
+              DO it = 1,3
+
+                WRITE(file_name,"(I3.3,A)")INT(YP(it)),'.Resi_slice.plt'
+                path_name = TRIM(dir_name)//'/'//TRIM(file_name)
+                OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
+                WRITE(100,*)'VARIABLES = X,Z,UU,UV,UW,VU,VV,VW,WU,WV,WW'
+                WRITE(100,"(2(A,I3,2X))")' ZONE  I = ',Nx,' K = ', Nz
+
+                J_loc = J_det(YP(it))
+                DO k = 1,Nz
+                  DO i = 1,Nx
+                    WRITE(100,"(11F15.9)") X(i),Z(k),Resi_T(i,J_loc,k,1:3,1:3)
+                  END DO
+                END DO
+
+                CLOSE(100)
+              END DO
+
+
               CALL CPU_TIME(time_end)
 
               WRITE(*,*) '           WRITING PROCESS IS COMPLETED            '
