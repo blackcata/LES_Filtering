@@ -20,7 +20,7 @@
               IMPLICIT NONE
               INTEGER :: i,j,k,it,J_loc
               REAL(KIND=8) :: time_sta, time_end, U_ave, V_ave, W_ave
-              REAL(KIND=8) :: YP(1:3)
+              REAL(KIND=8) :: YP(1:3), RESI_ave(1:3,1:3)
               WRITE(*,*) '----------------------------------------------------'
               WRITE(*,*) '              WRITING PROCESS STARTED               '
               CALL CPU_TIME(time_sta)
@@ -121,6 +121,37 @@
                 CLOSE(100)
               END DO
 
+              !----------------------------------------------------------------!
+              !            Outputs for Averaged U on x,z directions            !
+              !----------------------------------------------------------------!
+              file_name = '/Resi_averaged_profile.plt'
+              path_name = TRIM(dir_name)//TRIM(file_name)
+              OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
+              WRITE(100,*) 'VARIABLES = Y,U_ave,V_ave,W_ave'
+
+              DO j = 1,Ny
+                U_ave = 0.0
+                V_ave = 0.0
+                W_ave = 0.0
+
+                DO k = 1,Nz
+                  DO i = 1,Nx
+
+                    DO v_i = 1,3
+                      DO v_j = 1,3
+                        RESI_ave(v_i,v_j) = RESI_ave(v_i,v_j)                   &
+                                          + Resi_T(i,j,k,v_i,v_j)
+                      END DO
+                    END DO
+
+                  END DO
+                END DO
+                RESI_ave(1:3,1:3) = RESI_ave(1:3,1:3)/(Nx*Nz)
+
+                WRITE(100,"(10F15.9)")Y(j),RESI_ave(1:3,1:3)
+
+              END DO
+              CLOSE(100)
 
               CALL CPU_TIME(time_end)
 
