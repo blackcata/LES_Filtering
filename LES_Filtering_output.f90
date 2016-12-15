@@ -168,10 +168,10 @@
                 WRITE(file_name,"(I3.3,A)")INT(YP(it)),'.S_T_slice.plt'
                 path_name = TRIM(dir_name)//'/'//TRIM(file_name)
                 OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
-                WRITE(100,*)'VARIABLES = X,Z,S_11,S_12,S_13,S_21,S_22,S_23&
-                                            ,S_31,S_32,S_33,S_Fil_11,S_Fil_12   &
-                                            ,S_Fil_13,S_Fil_21,S_Fil_22,S_Fil_23&
-                                            ,S_Fil_31,S_Fil_32,S_Fil_33,S'
+                WRITE(100,*)'VARIABLES = X,Z,S_11,S_12,S_13,S_21,S_22,S_23'      &
+                                         //',S_31,S_32,S_33,S_Fil_11,S_Fil_12'   &
+                                         //',S_Fil_13,S_Fil_21,S_Fil_22,S_Fil_23'&
+                                         //',S_Fil_31,S_Fil_32,S_Fil_33,S'
                 WRITE(100,"(2(A,I3,2X))")' ZONE  I = ',Nx,' K = ', Nz
 
                 J_loc = J_det(YP(it))
@@ -192,10 +192,10 @@
               file_name = '/S_T_averaged_profile.plt'
               path_name = TRIM(dir_name)//TRIM(file_name)
               OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
-              WRITE(100,*)'VARIABLES = X,Z,S_11,S_12,S_13,S_21,S_22,S_23        &
-                                          ,S_31,S_32,S_33,S_Fil_11,S_Fil_12     &
-                                          ,S_Fil_13,S_Fil_21,S_Fil_22,S_Fil_23  &
-                                          ,S_Fil_31,S_Fil_32,S_Fil_33'
+              WRITE(100,*)'VARIABLES = X,Z,S_11,S_12,S_13,S_21,S_22,S_23'      &
+                                       //',S_31,S_32,S_33,S_Fil_11,S_Fil_12'   &
+                                       //',S_Fil_13,S_Fil_21,S_Fil_22,S_Fil_23'&
+                                       //',S_Fil_31,S_Fil_32,S_Fil_33,S'
 
               DO j = 1,Ny
                 S_T_ave(1:2,1:3,1:3) = 0.0
@@ -253,7 +253,7 @@
               file_name = '/NU_R_averaged_profile.plt'
               path_name = TRIM(dir_name)//TRIM(file_name)
               OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
-              WRITE(100,*)'VARIABLES = Y,NU_11,NU_12,NU_13,NU_21,NU_22,NU_23&
+              WRITE(100,*)'VARIABLES = Y,NU_11,NU_12,NU_13,NU_21,NU_22,NU_23    &
                                         ,NU_31,NU_32,NU_33'
 
               DO j = 1,Ny
