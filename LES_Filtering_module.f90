@@ -17,7 +17,8 @@
 
           REAL(KIND=8),DIMENSION(:),ALLOCATABLE :: X,Y,Z,dy
           REAL(KIND=8),DIMENSION(:,:,:),ALLOCATABLE :: U,V,W,U_Fil,V_Fil,W_Fil
-          REAL(KIND=8),DIMENSION(:,:,:,:,:),ALLOCATABLE :: Resi_T
+          REAL(KIND=8),DIMENSION(:,:,:,:,:),ALLOCATABLE :: Resi_T,S_T,S_T_Fil,  &
+                                                           Nu_R
 
           CONTAINS
             !------------------------------------------------------------------!
@@ -55,17 +56,17 @@
             !------------------------------------------------------------------!
             !                             U Selection                          !
             !------------------------------------------------------------------!
-            FUNCTION FIND_U(i_tmp,j,k_tmp,v_i)
-              INTEGER,INTENT(IN) :: i_tmp,j,k_tmp,v_i
+            FUNCTION FIND_U(i,j,k,v_i)
+              INTEGER,INTENT(IN) :: i,j,k,v_i
               REAL(KIND=8) :: FIND_U
 
               SELECT CASE(v_i)
                 CASE(1)
-                  FIND_U = U(i_tmp,j,k_tmp)
+                  FIND_U = U(i,j,k)
                 CASE(2)
-                  FIND_U = V(i_tmp,j,k_tmp)
+                  FIND_U = V(i,j,k)
                 CASE(3)
-                  FIND_U = W(i_tmp,j,k_tmp)
+                  FIND_U = W(i,j,k)
               END SELECT
 
             END FUNCTION FIND_U
@@ -87,5 +88,42 @@
               END SELECT
 
             END FUNCTION FIND_U_Fil
+
+            !------------------------------------------------------------------!
+            !                            dx Selection                          !
+            !------------------------------------------------------------------!
+            FUNCTION FIND_dU(i,j,k,v_i)
+              INTEGER,INTENT(IN) :: i,j,k,v_i
+              REAL(KIND=8) :: FIND_dU
+
+              SELECT CASE(v_i)
+                CASE(1)
+                  FIND_dU = (U(i+1,j,k) - U(i-1,j,k))
+                CASE(2)
+                  FIND_dU = (V(i,j+1,k) - V(i,j-1,k))
+                CASE(3)
+                  FIND_dU = (W(i,j,k+1) - W(i,j,k-1))
+              END SELECT
+
+            END FUNCTION FIND_dU
+
+
+            !------------------------------------------------------------------!
+            !                            dx Selection                          !
+            !------------------------------------------------------------------!
+            FUNCTION FIND_dx(i,j,k,x_j)
+              INTEGER,INTENT(IN) :: i,j,k,x_j
+              REAL(KIND=8) :: FIND_dx
+
+              SELECT CASE(x_j)
+                CASE(1)
+                  FIND_dx = 2*dx
+                CASE(2)
+                  FIND_dx = (dy(j)+dy(j+1))
+                CASE(3)
+                  FIND_dx = 2*dz
+              END SELECT
+
+            END FUNCTION FIND_dx
 
         END MODULE

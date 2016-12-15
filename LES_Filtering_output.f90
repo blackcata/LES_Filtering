@@ -15,21 +15,22 @@
                   ONLY : Nx, Ny, Nz, file_name, dir_name, path_name
 
               USE LES_FILTERING_module,                                         &
-                  ONLY : X, Y, Z, U, V, W, U_Fil, V_Fil, W_Fil, dy, Resi_T
+                  ONLY : X, Y, Z, U, V, W, U_Fil, V_Fil, W_Fil, dy, Resi_T,     &
+                         S_T, S_T_Fil, NU_R
 
               IMPLICIT NONE
-              INTEGER :: i,j,k,it,J_loc
+              INTEGER :: i,j,k,it,J_loc,v_i,v_j
               REAL(KIND=8) :: time_sta, time_end, U_ave, V_ave, W_ave
               REAL(KIND=8) :: YP(1:3), RESI_ave(1:3,1:3)
               WRITE(*,*) '----------------------------------------------------'
               WRITE(*,*) '              WRITING PROCESS STARTED               '
               CALL CPU_TIME(time_sta)
 
-              dir_name = 'RESULT'
-
               !----------------------------------------------------------------!
               !                Outputs for U_Fil(Filtered velocity)
               !----------------------------------------------------------------!
+              dir_name = 'RESULT/U'
+
               file_name = '/U_filtered.plt'
               path_name = TRIM(dir_name)//TRIM(file_name)
               OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
@@ -101,6 +102,8 @@
               !----------------------------------------------------------------!
               !              Outputs for Residual at Y+ = 5,30,200             !
               !----------------------------------------------------------------!
+              dir_name = 'RESULT/RESI'
+
               YP = [5,30,200]
 
               DO it = 1,3
@@ -127,7 +130,7 @@
               file_name = '/Resi_averaged_profile.plt'
               path_name = TRIM(dir_name)//TRIM(file_name)
               OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
-              WRITE(100,*) 'VARIABLES = Y,U_ave,V_ave,W_ave'
+              WRITE(100,*) 'VARIABLES = Y,U,UV,UW,VU,VV,VW,WU,WV,WW'
 
               DO j = 1,Ny
                 U_ave = 0.0
@@ -153,6 +156,32 @@
               END DO
               CLOSE(100)
 
+              !----------------------------------------------------------------!
+              !              Outputs for Residual at Y+ = 5,30,200             !
+              !----------------------------------------------------------------!
+              dir_name = 'RESULT/EDDY_VISCOSITY'
+
+              YP = [5,30,200]
+
+              DO it = 1,3
+
+                WRITE(file_name,"(I3.3,A)")INT(YP(it)),'.NU_R_slice.plt'
+                path_name = TRIM(dir_name)//'/'//TRIM(file_name)
+                OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
+                WRITE(100,*)'VARIABLES = X,Z,NU_11,NU_12,NU_13,NU_21,NU_22,NU_23&
+                                            ,NU_31,NU_32,NU_33'
+                WRITE(100,"(2(A,I3,2X))")' ZONE  I = ',Nx,' K = ', Nz
+
+                J_loc = J_det(YP(it))
+                DO k = 1,Nz
+                  DO i = 1,Nx
+                    WRITE(100,"(11F15.9)") X(i),Z(k),NU_R(i,J_loc,k,1:3,1:3)
+                  END DO
+                END DO
+
+                CLOSE(100)
+              END DO
+
               CALL CPU_TIME(time_end)
 
               WRITE(*,*) '           WRITING PROCESS IS COMPLETED            '
@@ -160,6 +189,6 @@
               WRITE(*,*) '----------------------------------------------------'
               WRITE(*,*) ''
 
-              DEALLOCATE(X,Y,Z,U,V,W,U_Fil,V_Fil,W_Fil,dy)
+              DEALLOCATE(X,Y,Z,U,V,W,U_Fil,V_Fil,W_Fil,dy,S_T,S_T_Fil)
 
           END SUBROUTINE OUTPUT

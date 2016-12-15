@@ -11,19 +11,20 @@
         SUBROUTINE READ_DNS
 
           USE LES_FILTERING_module,                                             &
-              ONLY : G
+              ONLY : G, FIND_dU, FIND_dx
 
           USE LES_FILTERING_module,                                             &
               ONLY : Nx, Ny, Nz, dx, dz, Del, FW, tol, Nx_fil, Nz_fil,          &
                      file_name, dir_name, path_name
 
           USE LES_FILTERING_module,                                             &
-              ONLY : X, Y, Z, U, V, W, dy
+              ONLY : X, Y, Z, U, V, W, dy, S_T
 
           IMPLICIT NONE
 
-          INTEGER :: i,j,k,it
-          REAL(KIND=8) :: tmp_x, tmp_y, tmp_z, time_sta, time_end, dg, r
+          INTEGER :: i,j,k,it,x_i,x_j
+          REAL(KIND=8) :: tmp_x, tmp_y, tmp_z, time_sta, time_end, dg, r,       &
+                          dU_i, dU_j, dx_i, dx_j
           CHARACTER(20) :: header
 
           WRITE(*,*) '----------------------------------------------------'
@@ -64,6 +65,39 @@
           dx  = X(2) - X(1)
           dz  = Z(2) - Z(1)
           Del = FW*sqrt(dx * dz)
+
+          !--------------------------------------------------------------------!
+          !                      Calculating Stress Tensor                     !
+          !--------------------------------------------------------------------!
+          !$OMP PARALLEL DO private(k,j,i,x_i,x_j,dU_i,dU_j,dx_i,dx_j)
+          DO k = 2,Nz-1
+            DO j = 2,Ny-1
+              DO i = 2,Nx-1
+
+                DO x_i = 1,3
+                  DO x_j = 1,3
+                    dU_i = FIND_dU(i,j,k,x_i)
+                    dU_j = FIND_dU(i,j,k,x_j)
+                    dx_i = FIND_dx(i,j,k,x_i)
+                    dx_j = FIND_dx(i,j,k,x_j)
+
+                    S_T(i,j,k,x_i,x_j) = ( dU_i / dx_j + dU_j / dx_i ) / 2.0
+                  END DO
+                END DO
+
+              END DO
+            END DO
+          END DO
+          !OMP END PARALLEL
+
+          S_T(1,1:Ny,1:Nz,1:3,1:3)  = S_T(2,1:Ny,1:Nz,1:3,1:3)
+          S_T(Nx,1:Ny,1:Nz,1:3,1:3) = S_T(Nx-1,1:Ny,1:Nz,1:3,1:3)
+
+          S_T(1:Nx,1,1:Nz,1:3,1:3)  = S_T(1:Nx,2,1:Nz,1:3,1:3)
+          S_T(1:Nx,Ny,1:Nz,1:3,1:3) = S_T(1:Nx,Ny-1,1:Nz,1:3,1:3)
+
+          S_T(1:Nx,1:Ny,1,1:3,1:3)  = S_T(1:Nx,1:Ny,2,1:3,1:3)
+          S_T(1:Nx,1:Ny,Nz,1:3,1:3) = S_T(1:Nx,1:Ny,Nz-1,1:3,1:3)
 
           !--------------------------------------------------------------------!
           !       Determining the number of filtering node in x,z dirctions    !

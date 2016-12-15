@@ -17,11 +17,12 @@
               ONLY : Nx, Ny, Nz, dx, dz, Del, Nx_fil, Nz_fil
 
           USE LES_FILTERING_module,                                             &
-              ONLY : X, Y, Z, U, V, W, dy, U_Fil, V_Fil, W_Fil, Resi_T
+              ONLY : X, Y, Z, U, V, W, dy, U_Fil, V_Fil, W_Fil,                 &
+                     Resi_T, S_T, S_T_Fil, NU_R
 
           IMPLICIT NONE
           INTEGER :: i,j,k, i_loc, k_loc, i_tmp, k_tmp, v_i, v_j
-          REAL(KIND=8) :: r, G_tot, time_sta, time_end, U_i, U_j
+          REAL(KIND=8) :: r, G_tot, time_sta, time_end, U_i, U_j, S
 
           WRITE(*,*) '----------------------------------------------------'
           WRITE(*,*) '             FILTERING PROCESS STARTED              '
@@ -83,6 +84,8 @@
                         U_j = FIND_U(i_tmp,j,k_tmp,v_j)
                         Resi_T(i,j,k,v_i,v_j) = Resi_T(i,j,k,v_i,v_j)           &
                                               + G(Del,r)*U_i*U_j
+                        S_T_Fil(i,j,k,v_i,v_j) = S_T_Fil(i,j,k,v_i,v_j)        &
+                                               + G(Del,r)*S_T(i,j,k,v_i,v_j)
                       END DO
                     END DO
 
@@ -96,14 +99,22 @@
                 V_Fil(i,j,k) = V_Fil(i,j,k)/G_tot
                 W_Fil(i,j,k) = W_Fil(i,j,k)/G_tot
 
+                S_T_Fil(i,j,k,1:3,1:3) = S_T_Fil(i,j,k,1:3,1:3)/G_tot
+
+                S = 0.0
                 DO v_i = 1,3
                   DO v_j = 1,3
                     U_i = FIND_U_Fil(i,j,k,v_i)
                     U_j = FIND_U_Fil(i,j,k,v_j)
                     Resi_T(i,j,k,v_i,v_j) = Resi_T(i,j,k,v_i,v_j)/G_tot         &
                                           - U_i*U_j
+                    S  = S + ( S_T_Fil(i,j,k,v_i,v_j) )**2
                   END DO
                 END DO
+                S = sqrt(2*S)
+
+                NU_R(i,j,k,1:3,1:3) = - Resi_T(i,j,k,1:3,1:3)                    &
+                                      * S_T_Fil(i,j,k,1:3,1:3)/S**2
                 ! WRITE(*,"(3(I10),3(F15.9))")                                  &
                 !                i,j,k,U_Fil(i,j,k),V_Fil(i,j,k),W_Fil(i,j,k)
               END DO
