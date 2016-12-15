@@ -31,6 +31,7 @@
             CALL SYSTEM('mkdir '//TRIM(dir_name))
             CALL SYSTEM('mkdir '//TRIM(dir_name)//'/U')
             CALL SYSTEM('mkdir '//TRIM(dir_name)//'/RESI')
+            CALL SYSTEM('mkdir '//TRIM(dir_name)//'/STRAIN_RATE')
             CALL SYSTEM('mkdir '//TRIM(dir_name)//'/EDDY_VISCOSITY')
 
             CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/*.plt')
