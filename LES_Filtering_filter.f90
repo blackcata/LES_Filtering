@@ -33,7 +33,7 @@
           !--------------------------------------------------------------------!
           !                  Main loop of filtering velocities                 !
           !--------------------------------------------------------------------!
-          !$OMP PARALLEL DO private(k,j,i,k_loc,i_loc,i_tmp,k_tmp,v_i,v_j,U_i,U_j,G_tot,r)
+          !$OMP PARALLEL DO private(k,j,i,k_loc,i_loc,i_tmp,k_tmp,v_i,v_j,U_i,U_j,G_tot,r,S)
           DO j = 1,Ny
             DO k = 1,Nz
               DO i = 1,Nx

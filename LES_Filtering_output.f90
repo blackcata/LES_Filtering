@@ -21,7 +21,7 @@
               IMPLICIT NONE
               INTEGER :: i,j,k,it,J_loc,v_i,v_j
               REAL(KIND=8) :: time_sta, time_end, U_ave, V_ave, W_ave
-              REAL(KIND=8) :: YP(1:3), RESI_ave(1:3,1:3)
+              REAL(KIND=8) :: YP(1:3), RESI_ave(1:3,1:3), NU_R_ave(1:3,1:3)
               WRITE(*,*) '----------------------------------------------------'
               WRITE(*,*) '              WRITING PROCESS STARTED               '
               CALL CPU_TIME(time_sta)
@@ -133,9 +133,7 @@
               WRITE(100,*) 'VARIABLES = Y,U,UV,UW,VU,VV,VW,WU,WV,WW'
 
               DO j = 1,Ny
-                U_ave = 0.0
-                V_ave = 0.0
-                W_ave = 0.0
+                RESI_ave(1:3,1:3) = 0.0
 
                 DO k = 1,Nz
                   DO i = 1,Nx
@@ -157,7 +155,7 @@
               CLOSE(100)
 
               !----------------------------------------------------------------!
-              !              Outputs for Residual at Y+ = 5,30,200             !
+              !            Outputs for eddy-viscosity at Y+ = 5,30,200         !
               !----------------------------------------------------------------!
               dir_name = 'RESULT/EDDY_VISCOSITY'
 
@@ -169,19 +167,50 @@
                 path_name = TRIM(dir_name)//'/'//TRIM(file_name)
                 OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
                 WRITE(100,*)'VARIABLES = X,Z,NU_11,NU_12,NU_13,NU_21,NU_22,NU_23&
-                                            ,NU_31,NU_32,NU_33'
+                                            ,NU_31,NU_32,NU_33,NU'
                 WRITE(100,"(2(A,I3,2X))")' ZONE  I = ',Nx,' K = ', Nz
 
                 J_loc = J_det(YP(it))
                 DO k = 1,Nz
                   DO i = 1,Nx
-                    WRITE(100,"(11F15.9)") X(i),Z(k),NU_R(i,J_loc,k,1:3,1:3)
+                    WRITE(100,"(12F15.9)") X(i),Z(k),NU_R(i,J_loc,k,1:3,1:3),   &
+                                           SUM(NU_R(i,J_loc,k,1:3,1:3))
                   END DO
                 END DO
 
                 CLOSE(100)
               END DO
 
+              !----------------------------------------------------------------!
+              !      Outputs for Averaged eddy-viscosity on x,z directions     !
+              !----------------------------------------------------------------!
+              file_name = '/NU_R_averaged_profile.plt'
+              path_name = TRIM(dir_name)//TRIM(file_name)
+              OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
+              WRITE(100,*)'VARIABLES = Y,NU_11,NU_12,NU_13,NU_21,NU_22,NU_23&
+                                        ,NU_31,NU_32,NU_33'
+
+              DO j = 1,Ny
+                NU_R_ave(1:3,1:3) = 0.0
+
+                DO k = 1,Nz
+                  DO i = 1,Nx
+
+                    DO v_i = 1,3
+                      DO v_j = 1,3
+                        NU_R_ave(v_i,v_j) = NU_R_ave(v_i,v_j)                   &
+                                          + NU_R(i,j,k,v_i,v_j)
+                      END DO
+                    END DO
+
+                  END DO
+                END DO
+                NU_R_ave(1:3,1:3) = NU_R_ave(1:3,1:3)/(Nx*Nz)
+
+                WRITE(100,"(10F15.9)")Y(j),NU_R_ave(1:3,1:3)
+
+              END DO
+              CLOSE(100)
               CALL CPU_TIME(time_end)
 
               WRITE(*,*) '           WRITING PROCESS IS COMPLETED            '
