@@ -19,7 +19,8 @@
 
           CALL SETUP
           CALL READ_DNS
-          CALL FILTER
+          CALL VORTICAL_STRUCTURE
+          ! CALL FILTER
           CALL OUTPUT
 
         END PROGRAM LES_FILTERING

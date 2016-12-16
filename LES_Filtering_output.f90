@@ -16,7 +16,7 @@
 
               USE LES_FILTERING_module,                                         &
                   ONLY : X, Y, Z, U, V, W, U_Fil, V_Fil, W_Fil, dy, Resi_T,     &
-                         S_T, S_T_Fil, O_T, O_T_Fil, NU_R
+                         S_T, S_T_Fil, O_T, O_T_Fil, NU_R, VS
 
               IMPLICIT NONE
               INTEGER :: i,j,k,it,J_loc,v_i,v_j
@@ -347,6 +347,26 @@
               END DO
               CLOSE(100)
 
+              !----------------------------------------------------------------!
+              !               Outputs for Vortical Structures                  !
+              !----------------------------------------------------------------!
+              dir_name = 'RESULT/VORTICAL_STRUCTURE'
+
+              file_name = '/VORTICAL_STRUCTURE.plt'
+              path_name = TRIM(dir_name)//TRIM(file_name)
+              OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
+              WRITE(100,*) 'VARIABLES = X,Y,Z,Lambda_2'
+              WRITE(100,"(3(A,I3,2X))")                                         &
+                                  ' ZONE  I = ',Nx-2,' J = ',Ny-2, ' K = ', Nz-2
+              DO k = 2,Nz-1
+                DO j = 2,Ny-1
+                  DO i = 2,Nx-1
+                    WRITE(100,"(4F15.9)") X(i),Y(j),Z(k),VS(i,j,k)
+                  END DO
+                END DO
+              END DO
+              CLOSE(100)
+
               CALL CPU_TIME(time_end)
 
               WRITE(*,*) '           WRITING PROCESS IS COMPLETED            '
@@ -355,6 +375,6 @@
               WRITE(*,*) ''
 
               DEALLOCATE(X,Y,Z,U,V,W,U_Fil,V_Fil,W_Fil,dy,S_T,S_T_Fil,NU_R,     &
-                                                          O_T,O_T_Fil)
+                                                          O_T,O_T_Fil,VS)
 
           END SUBROUTINE OUTPUT

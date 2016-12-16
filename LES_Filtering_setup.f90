@@ -12,11 +12,11 @@
 
             USE LES_FILTERING_module,                                           &
                 ONLY : Nx, Ny, Nz, dx, dz, FW, pi, tol,                         &
-                       file_name, dir_name, path_name
+                       file_name, dir_name, path_name, VS_CASE
 
             USE LES_FILTERING_module,                                           &
                 ONLY : X, Y, Z, dy, U, V, W, U_Fil, V_Fil, W_Fil,               &
-                       Resi_T, S_T, S_T_Fil, NU_R, O_T, O_T_Fil
+                       Resi_T, S_T, S_T_Fil, NU_R, O_T, O_T_Fil, VS
 
             IMPLICIT NONE
             INTEGER :: i,j,k
@@ -34,6 +34,7 @@
             CALL SYSTEM('mkdir '//TRIM(dir_name)//'/STRAIN_RATE')
             CALL SYSTEM('mkdir '//TRIM(dir_name)//'/ROTATION_RATE')
             CALL SYSTEM('mkdir '//TRIM(dir_name)//'/EDDY_VISCOSITY')
+            CALL SYSTEM('mkdir '//TRIM(dir_name)//'/VORTICAL_STRUCTURE')
 
             CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/*.plt')
             CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/U'//'/*.plt')
@@ -41,7 +42,17 @@
             CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/STRAIN_RATE'//'/*.plt')
             CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/ROTATION_RATE'//'/*.plt')
             CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/EDDY_VISCOSITY'//'/*.plt')
+            CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/VORTICAL_STRUCTURE'//'/*.plt')
 
+            !------------------------------------------------------------------!
+            !                    Vortical Structure methods                    !
+            !                                                                  !
+            !   (a) Q-criteria         : 1                                     !
+            !   (b) Lambda_2 criteria  : 2                                     !
+            !   (c) Lambda_ci criteria : 3                                     !
+            !
+            !------------------------------------------------------------------!
+            VS_CASE = 1
 
             !------------------------------------------------------------------!
             !                    Constants for LES filtering                   !
@@ -59,7 +70,7 @@
             ALLOCATE( X(1:Nx),Y(1:Ny),Z(1:Nz),dy(1:Ny-1) )
             ALLOCATE( U(1:Nx,1:Ny,1:Nz), V(1:Nx,1:Ny,1:Nz), W(1:Nx,1:Ny,1:Nz) )
             ALLOCATE( U_Fil(1:Nx,1:Ny,1:Nz), V_Fil(1:Nx,1:Ny,1:Nz),             &
-                      W_Fil(1:Nx,1:Ny,1:Nz)                                   )
+                      W_Fil(1:Nx,1:Ny,1:Nz), VS(1:Nx,1:Ny,1:Nz)                 )
             ALLOCATE(Resi_T(1:Nx,1:Ny,1:Nz,1:3,1:3),NU_R(1:Nx,1:Ny,1:Nz,1:3,1:3))
             ALLOCATE(S_T(1:Nx,1:Ny,1:Nz,1:3,1:3),S_T_Fil(1:Nx,1:Ny,1:Nz,1:3,1:3))
             ALLOCATE(O_T(1:Nx,1:Ny,1:Nz,1:3,1:3),O_T_Fil(1:Nx,1:Ny,1:Nz,1:3,1:3))
@@ -77,6 +88,7 @@
             V(1:Nx,1:Ny,1:Nz) = 0.0
             W(1:Nx,1:Ny,1:Nz) = 0.0
 
+            VS(1:Nx,1:Ny,1:Nz)    = 0.0
             U_Fil(1:Nx,1:Ny,1:Nz) = 0.0
             V_Fil(1:Nx,1:Ny,1:Nz) = 0.0
             W_Fil(1:Nx,1:Ny,1:Nz) = 0.0
