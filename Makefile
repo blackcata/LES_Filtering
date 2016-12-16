@@ -1,5 +1,5 @@
 F90=ifort
-FCFLAGS=-O2 -qopenmp
+FCFLAGS=-O3 -qopenmp
 
 TARGET= LES_Filtering
 OBJECT= LES_Filtering_module.o LES_Filtering_main.o LES_Filtering_setup.o \

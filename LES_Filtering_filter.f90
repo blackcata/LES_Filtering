@@ -22,7 +22,7 @@
 
           IMPLICIT NONE
           INTEGER :: i,j,k, i_loc, k_loc, i_tmp, k_tmp, v_i, v_j
-          REAL(KIND=8) :: r, G_tot, time_sta, time_end, U_i, U_j, S
+          REAL(KIND=8) :: r, G_tot, time_sta, time_end, U_i, U_j, S          
 
           WRITE(*,*) '----------------------------------------------------'
           WRITE(*,*) '             FILTERING PROCESS STARTED              '
@@ -84,8 +84,8 @@
                         U_j = FIND_U(i_tmp,j,k_tmp,v_j)
                         Resi_T(i,j,k,v_i,v_j) = Resi_T(i,j,k,v_i,v_j)           &
                                               + G(Del,r)*U_i*U_j
-                        S_T_Fil(i,j,k,v_i,v_j) = S_T_Fil(i,j,k,v_i,v_j)        &
-                                               + G(Del,r)*S_T(i,j,k,v_i,v_j)
+                        S_T_Fil(i,j,k,v_i,v_j) = S_T_Fil(i,j,k,v_i,v_j)         &
+                                           + G(Del,r)*S_T(i_tmp,j,k_tmp,v_i,v_j)
                       END DO
                     END DO
 

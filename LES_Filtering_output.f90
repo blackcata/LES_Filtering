@@ -22,7 +22,7 @@
               INTEGER :: i,j,k,it,J_loc,v_i,v_j
               REAL(KIND=8) :: time_sta, time_end, U_ave, V_ave, W_ave
               REAL(KIND=8) :: YP(1:3), RESI_ave(1:3,1:3), NU_R_ave(1:3,1:3)     &
-                             ,S_T_ave(1:2,1:3,1:3)
+                             ,S_T_ave(1:3,1:3,1:2)
 
               WRITE(*,*) '----------------------------------------------------'
               WRITE(*,*) '              WRITING PROCESS STARTED               '
@@ -33,20 +33,20 @@
               !----------------------------------------------------------------!
               dir_name = 'RESULT/U'
 
-              file_name = '/U_filtered.plt'
-              path_name = TRIM(dir_name)//TRIM(file_name)
-              OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
-              WRITE(100,*) 'VARIABLES = X,Y,Z,U_fil,V_Fil,W_Fil'
-              WRITE(100,"(3(A,I3,2X))")' ZONE  I = ',Nx,' J = ',Ny, ' K = ', Nz
-              DO k = 1,Nz
-                DO j = 1,Ny
-                  DO i = 1,Nx
-                    WRITE(100,"(6F15.9)") X(i),Y(j),Z(k),                       &
-                                          U_fil(i,j,k),V_Fil(i,j,k),W_Fil(i,j,k)
-                  END DO
-                END DO
-              END DO
-              CLOSE(100)
+              ! file_name = '/U_filtered.plt'
+              ! path_name = TRIM(dir_name)//TRIM(file_name)
+              ! OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
+              ! WRITE(100,*) 'VARIABLES = X,Y,Z,U_fil,V_Fil,W_Fil'
+              ! WRITE(100,"(3(A,I3,2X))")' ZONE  I = ',Nx,' J = ',Ny, ' K = ', Nz
+              ! DO k = 1,Nz
+              !   DO j = 1,Ny
+              !     DO i = 1,Nx
+              !       WRITE(100,"(6F15.9)") X(i),Y(j),Z(k),                       &
+              !                             U_fil(i,j,k),V_Fil(i,j,k),W_Fil(i,j,k)
+              !     END DO
+              !   END DO
+              ! END DO
+              ! CLOSE(100)
 
               !----------------------------------------------------------------!
               !            Outputs for instaneous U at Y+ = 5,30,200           !
@@ -192,31 +192,32 @@
               file_name = '/S_T_averaged_profile.plt'
               path_name = TRIM(dir_name)//TRIM(file_name)
               OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
-              WRITE(100,*)'VARIABLES = X,Z,S_11,S_12,S_13,S_21,S_22,S_23'      &
+              WRITE(100,*)'VARIABLES =  Y,S_11,S_12,S_13,S_21,S_22,S_23'      &
                                        //',S_31,S_32,S_33,S_Fil_11,S_Fil_12'   &
                                        //',S_Fil_13,S_Fil_21,S_Fil_22,S_Fil_23'&
                                        //',S_Fil_31,S_Fil_32,S_Fil_33,S'
 
-              DO j = 1,Ny
-                S_T_ave(1:2,1:3,1:3) = 0.0
+              DO j = 2,Ny-1
+                S_T_ave(1:3,1:3,1:2) = 0.0
 
-                DO k = 1,Nz
-                  DO i = 1,Nx
+                DO k = 2,Nz-1
+                  DO i = 2,Nx-1
 
                     DO v_i = 1,3
                       DO v_j = 1,3
-                        S_T_ave(1,v_i,v_j) = S_T_ave(1,v_i,v_j)                 &
+                        S_T_ave(v_i,v_j,1) = S_T_ave(v_i,v_j,1)                 &
                                            + S_T(i,j,k,v_i,v_j)
-                        S_T_ave(2,v_i,v_j) = S_T_ave(2,v_i,v_j)                 &
+                        S_T_ave(v_i,v_j,2) = S_T_ave(v_i,v_j,2)                 &
                                            + S_T_Fil(i,j,k,v_i,v_j)
                       END DO
                     END DO
 
                   END DO
                 END DO
-                S_T_ave(1:2,1:3,1:3) = S_T_ave(1:2,1:3,1:3)/(Nx*Nz)
+                S_T_ave(1:3,1:3,1:2) = S_T_ave(1:3,1:3,1:2)/(Nx*Nz)
 
-                WRITE(100,"(19F15.9)")Y(j),S_T_ave(1:2,1:3,1:3)
+                WRITE(100,"(20F15.9)")Y(j),S_T_ave(1:3,1:3,1),                  &
+                                      S_T_ave(1:3,1:3,2),SUM(S_T_ave(1:3,1:3,2))
 
               END DO
               CLOSE(100)
@@ -273,7 +274,7 @@
                 END DO
                 NU_R_ave(1:3,1:3) = NU_R_ave(1:3,1:3)/(Nx*Nz)
 
-                WRITE(100,"(10F15.9)")Y(j),NU_R_ave(1:3,1:3)
+                WRITE(100,"(11F15.9)")Y(j),NU_R_ave(1:3,1:3),SUM(NU_R_ave(1:3,1:3))
 
               END DO
               CLOSE(100)
