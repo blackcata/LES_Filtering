@@ -38,6 +38,10 @@
             CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/*.plt')
             CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/U'//'/*.plt')
             CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/RESI'//'/*.plt')
+            CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/STRAIN_RATE'//'/*.plt')
+            CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/ROTATION_RATE'//'/*.plt')
+            CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/EDDY_VISCOSITY'//'/*.plt')
+
 
             !------------------------------------------------------------------!
             !                    Constants for LES filtering                   !

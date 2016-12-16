@@ -341,7 +341,8 @@
                 END DO
                 NU_R_ave(1:3,1:3) = NU_R_ave(1:3,1:3)/(Nx*Nz)
 
-                WRITE(100,"(11F15.9)")Y(j),NU_R_ave(1:3,1:3),SUM(NU_R_ave(1:3,1:3))
+                WRITE(100,"(11F15.9)")Y(j),NU_R_ave(1:3,1:3),                   &
+                SUM(NU_R_ave(1:3,1:3))-NU_R_ave(1,1)-NU_R_ave(2,2)-NU_R_ave(3,3)
 
               END DO
               CLOSE(100)
