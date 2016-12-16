@@ -18,7 +18,7 @@
 
           USE LES_FILTERING_module,                                             &
               ONLY : X, Y, Z, U, V, W, dy, U_Fil, V_Fil, W_Fil,                 &
-                     Resi_T, S_T, S_T_Fil, NU_R
+                     Resi_T, S_T_Fil, O_T_Fil, NU_R
 
           IMPLICIT NONE
           INTEGER :: i,j,k, i_loc, k_loc, i_tmp, k_tmp, x_i, x_j
@@ -131,6 +131,7 @@
                     dx_j = FIND_dx(i,j,k,x_j)
 
                     S_T_Fil(i,j,k,x_i,x_j) = ( dU_i / dx_j + dU_j / dx_i ) / 2.0
+                    O_T_Fil(i,j,k,x_i,x_j) = ( dU_i / dx_j - dU_j / dx_i ) / 2.0
                     S  = S + ( S_T_Fil(i,j,k,x_i,x_j) )**2
                   END DO
                 END DO

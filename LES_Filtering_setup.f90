@@ -16,7 +16,7 @@
 
             USE LES_FILTERING_module,                                           &
                 ONLY : X, Y, Z, dy, U, V, W, U_Fil, V_Fil, W_Fil,               &
-                       Resi_T, S_T, S_T_Fil, NU_R
+                       Resi_T, S_T, S_T_Fil, NU_R, O_T, O_T_Fil
 
             IMPLICIT NONE
             INTEGER :: i,j,k
@@ -32,6 +32,7 @@
             CALL SYSTEM('mkdir '//TRIM(dir_name)//'/U')
             CALL SYSTEM('mkdir '//TRIM(dir_name)//'/RESI')
             CALL SYSTEM('mkdir '//TRIM(dir_name)//'/STRAIN_RATE')
+            CALL SYSTEM('mkdir '//TRIM(dir_name)//'/ROTATION_RATE')
             CALL SYSTEM('mkdir '//TRIM(dir_name)//'/EDDY_VISCOSITY')
 
             CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/*.plt')
@@ -57,6 +58,7 @@
                       W_Fil(1:Nx,1:Ny,1:Nz)                                   )
             ALLOCATE(Resi_T(1:Nx,1:Ny,1:Nz,1:3,1:3),NU_R(1:Nx,1:Ny,1:Nz,1:3,1:3))
             ALLOCATE(S_T(1:Nx,1:Ny,1:Nz,1:3,1:3),S_T_Fil(1:Nx,1:Ny,1:Nz,1:3,1:3))
+            ALLOCATE(O_T(1:Nx,1:Ny,1:Nz,1:3,1:3),O_T_Fil(1:Nx,1:Ny,1:Nz,1:3,1:3))
 
             !------------------------------------------------------------------!
             !                         Initial Conditions                       !
@@ -78,6 +80,8 @@
             Resi_T(1:Nx,1:Ny,1:Nz,1:3,1:3)  = 0.0
             S_T(1:Nx,1:Ny,1:Nz,1:3,1:3)     = 0.0
             S_T_Fil(1:Nx,1:Ny,1:Nz,1:3,1:3) = 0.0
+            O_T(1:Nx,1:Ny,1:Nz,1:3,1:3)     = 0.0
+            O_T_Fil(1:Nx,1:Ny,1:Nz,1:3,1:3) = 0.0
             NU_R(1:Nx,1:Ny,1:Nz,1:3,1:3)    = 0.0
 
         END SUBROUTINE SETUP

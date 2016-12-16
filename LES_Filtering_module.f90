@@ -18,7 +18,7 @@
           REAL(KIND=8),DIMENSION(:),ALLOCATABLE :: X,Y,Z,dy
           REAL(KIND=8),DIMENSION(:,:,:),ALLOCATABLE :: U,V,W,U_Fil,V_Fil,W_Fil
           REAL(KIND=8),DIMENSION(:,:,:,:,:),ALLOCATABLE :: Resi_T,S_T,S_T_Fil,  &
-                                                           Nu_R
+                                                           Nu_R,O_T,O_T_Fil
 
           CONTAINS
             !------------------------------------------------------------------!
