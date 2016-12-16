@@ -90,23 +90,58 @@
             END FUNCTION FIND_U_Fil
 
             !------------------------------------------------------------------!
-            !                            dx Selection                          !
+            !                            dU Selection                          !
             !------------------------------------------------------------------!
-            FUNCTION FIND_dU(i,j,k,v_i)
-              INTEGER,INTENT(IN) :: i,j,k,v_i
-              REAL(KIND=8) :: FIND_dU
+            FUNCTION FIND_dU(i,j,k,x_i,x_j)
+              INTEGER,INTENT(IN) :: i,j,k,x_i,x_j
+              REAL(KIND=8) :: FIND_dU, U_ij(0:2,0:2,0:2)
 
-              SELECT CASE(v_i)
+              SELECT CASE(x_i)
                 CASE(1)
-                  FIND_dU = (U(i+1,j,k) - U(i-1,j,k))
+                  U_ij(0:2,0:2,0:2) = U(i-1:i+1,j-1:j+1,k-1:k+1)
                 CASE(2)
-                  FIND_dU = (V(i,j+1,k) - V(i,j-1,k))
+                  U_ij(0:2,0:2,0:2) = V(i-1:i+1,j-1:j+1,k-1:k+1)
                 CASE(3)
-                  FIND_dU = (W(i,j,k+1) - W(i,j,k-1))
+                  U_ij(0:2,0:2,0:2) = W(i-1:i+1,j-1:j+1,k-1:k+1)
+              END SELECT
+
+              SELECT CASE(x_j)
+                CASE(1)
+                  FIND_dU = (U_ij(2,1,1) - U_ij(0,1,1))
+                CASE(2)
+                  FIND_dU = (U_ij(1,2,1) - U_ij(1,0,1))
+                CASE(3)
+                  FIND_dU = (U_ij(1,1,2) - U_ij(1,1,0))
               END SELECT
 
             END FUNCTION FIND_dU
 
+            !------------------------------------------------------------------!
+            !                          dU_Fil Selection                        !
+            !------------------------------------------------------------------!
+            FUNCTION FIND_dU_Fil(i,j,k,x_i,x_j)
+              INTEGER,INTENT(IN) :: i,j,k,x_i,x_j
+              REAL(KIND=8) :: FIND_dU_Fil, U_ij(0:2,0:2,0:2)
+
+              SELECT CASE(x_i)
+                CASE(1)
+                  U_ij(0:2,0:2,0:2) = U_Fil(i-1:i+1,j-1:j+1,k-1:k+1)
+                CASE(2)
+                  U_ij(0:2,0:2,0:2) = V_Fil(i-1:i+1,j-1:j+1,k-1:k+1)
+                CASE(3)
+                  U_ij(0:2,0:2,0:2) = W_Fil(i-1:i+1,j-1:j+1,k-1:k+1)
+              END SELECT
+
+              SELECT CASE(x_j)
+                CASE(1)
+                  FIND_dU_Fil = (U_ij(2,1,1) - U_ij(0,1,1))
+                CASE(2)
+                  FIND_dU_Fil = (U_ij(1,2,1) - U_ij(1,0,1))
+                CASE(3)
+                  FIND_dU_Fil = (U_ij(1,1,2) - U_ij(1,1,0))
+              END SELECT
+
+            END FUNCTION FIND_dU_Fil
 
             !------------------------------------------------------------------!
             !                            dx Selection                          !

@@ -76,8 +76,8 @@
 
                 DO x_i = 1,3
                   DO x_j = 1,3
-                    dU_i = FIND_dU(i,j,k,x_i)
-                    dU_j = FIND_dU(i,j,k,x_j)
+                    dU_i = FIND_dU(i,j,k,x_i,x_j)
+                    dU_j = FIND_dU(i,j,k,x_j,x_i)
                     dx_i = FIND_dx(i,j,k,x_i)
                     dx_j = FIND_dx(i,j,k,x_j)
 
