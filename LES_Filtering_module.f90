@@ -16,9 +16,12 @@
           CHARACTER(LEN=65) :: file_name, dir_name, path_name
 
           REAL(KIND=8),DIMENSION(:),ALLOCATABLE :: X,Y,Z,dy
-          REAL(KIND=8),DIMENSION(:,:,:),ALLOCATABLE :: U,V,W,U_Fil,V_Fil,W_Fil,VS
+          REAL(KIND=8),DIMENSION(:,:,:),ALLOCATABLE :: U,V,W,U_Fil,V_Fil,W_Fil, &
+                                                       U_Fil_2,V_Fil_2,W_Fil_2, &
+                                                       VS,Cs
           REAL(KIND=8),DIMENSION(:,:,:,:,:),ALLOCATABLE :: Resi_T,S_T,S_T_Fil,  &
-                                                           Nu_R,O_T,O_T_Fil
+                                                           Nu_R,O_T,O_T_Fil,    &
+                                                           S_T_Fil_2,L_T,M_T
 
           CONTAINS
             !------------------------------------------------------------------!
@@ -89,6 +92,25 @@
 
             END FUNCTION FIND_U_Fil
 
+
+            !------------------------------------------------------------------!
+            !                  Second Filtered U Selection                     !
+            !------------------------------------------------------------------!
+            FUNCTION FIND_U_Fil_2(i,j,k,v_i)
+              INTEGER,INTENT(IN) :: i,j,k,v_i
+              REAL(KIND=8) :: FIND_U_Fil_2
+
+              SELECT CASE(v_i)
+                CASE(1)
+                  FIND_U_Fil_2 = U_Fil_2(i,j,k)
+                CASE(2)
+                  FIND_U_Fil_2 = V_Fil_2(i,j,k)
+                CASE(3)
+                  FIND_U_Fil_2 = W_Fil_2(i,j,k)
+              END SELECT
+
+            END FUNCTION FIND_U_Fil_2
+
             !------------------------------------------------------------------!
             !                            dU Selection                          !
             !------------------------------------------------------------------!
@@ -109,7 +131,7 @@
                 CASE(1)
                   FIND_dU = (U_ij(2,1,1) - U_ij(0,1,1))
                 CASE(2)
-                  FIND_dU = (U_ij(1,2,1) - U_ij(1,0,1))
+                  FIND_dU = (dy(j)*U_ij(1,2,1) - dy(j+1)*U_ij(1,0,1))
                 CASE(3)
                   FIND_dU = (U_ij(1,1,2) - U_ij(1,1,0))
               END SELECT
@@ -136,12 +158,39 @@
                 CASE(1)
                   FIND_dU_Fil = (U_ij(2,1,1) - U_ij(0,1,1))
                 CASE(2)
-                  FIND_dU_Fil = (U_ij(1,2,1) - U_ij(1,0,1))
+                  FIND_dU_Fil = (dy(j)*U_ij(1,2,1) - dy(j+1)*U_ij(1,0,1))
                 CASE(3)
                   FIND_dU_Fil = (U_ij(1,1,2) - U_ij(1,1,0))
               END SELECT
 
             END FUNCTION FIND_dU_Fil
+
+            !------------------------------------------------------------------!
+            !                        dU_Fil_2 Selection                        !
+            !------------------------------------------------------------------!
+            FUNCTION FIND_dU_Fil_2(i,j,k,x_i,x_j)
+              INTEGER,INTENT(IN) :: i,j,k,x_i,x_j
+              REAL(KIND=8) :: FIND_dU_Fil_2, U_ij(0:2,0:2,0:2)
+
+              SELECT CASE(x_i)
+                CASE(1)
+                  U_ij(0:2,0:2,0:2) = U_Fil_2(i-1:i+1,j-1:j+1,k-1:k+1)
+                CASE(2)
+                  U_ij(0:2,0:2,0:2) = V_Fil_2(i-1:i+1,j-1:j+1,k-1:k+1)
+                CASE(3)
+                  U_ij(0:2,0:2,0:2) = W_Fil_2(i-1:i+1,j-1:j+1,k-1:k+1)
+              END SELECT
+
+              SELECT CASE(x_j)
+                CASE(1)
+                  FIND_dU_Fil_2 = (U_ij(2,1,1) - U_ij(0,1,1))
+                CASE(2)
+                  FIND_dU_Fil_2 = (dy(j)*U_ij(1,2,1) - dy(j+1)*U_ij(1,0,1))
+                CASE(3)
+                  FIND_dU_Fil_2 = (U_ij(1,1,2) - U_ij(1,1,0))
+              END SELECT
+
+            END FUNCTION FIND_dU_Fil_2
 
             !------------------------------------------------------------------!
             !                            dx Selection                          !
