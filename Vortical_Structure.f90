@@ -92,7 +92,7 @@
 
                   CALL EIG33(D_T_tmp,eig)
                   VS(i,j,k) = REAL(eig(2))
-                  WRITE(*,"(3I,4F15.9)"),i,j,k,REAL(eig(1:3))
+
                 END DO
               END DO
             END DO

@@ -16,7 +16,8 @@
 
             USE LES_FILTERING_module,                                           &
                 ONLY : X, Y, Z, dy, U, V, W, U_Fil, V_Fil, W_Fil,               &
-                       Resi_T, S_T, S_T_Fil, NU_R, O_T, O_T_Fil, VS
+                       Resi_T, S_T, S_T_Fil, NU_R, O_T, O_T_Fil, VS,            &
+                       L_T, M_T, U_Fil_2, V_Fil_2, W_Fil_2, S_T_Fil_2, Cs
 
             IMPLICIT NONE
             INTEGER :: i,j,k
@@ -28,13 +29,15 @@
             !------------------------------------------------------------------!
             file_name = 'instantaneous_velocity_field_re644.plt'
             dir_name  = 'RESULT'
+
             CALL SYSTEM('mkdir '//TRIM(dir_name))
             CALL SYSTEM('mkdir '//TRIM(dir_name)//'/U')
-            CALL SYSTEM('mkdir '//TRIM(dir_name)//'/RESI')
+            CALL SYSTEM('mkdir '//TRIM(dir_name)//'/RESIDUAL_STRESS')
             CALL SYSTEM('mkdir '//TRIM(dir_name)//'/STRAIN_RATE')
             CALL SYSTEM('mkdir '//TRIM(dir_name)//'/ROTATION_RATE')
             CALL SYSTEM('mkdir '//TRIM(dir_name)//'/EDDY_VISCOSITY')
             CALL SYSTEM('mkdir '//TRIM(dir_name)//'/VORTICAL_STRUCTURE')
+            CALL SYSTEM('mkdir '//TRIM(dir_name)//'/SMARGORINSKY_COEFFICIENT')
 
             CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/*.plt')
             CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/U'//'/*.plt')
@@ -43,6 +46,7 @@
             CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/ROTATION_RATE'//'/*.plt')
             CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/EDDY_VISCOSITY'//'/*.plt')
             CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/VORTICAL_STRUCTURE'//'/*.plt')
+            CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/SMARGORINSKY_COEFFICIENT'//'/*.plt')
 
             !------------------------------------------------------------------!
             !                    Vortical Structure methods                    !
@@ -52,7 +56,7 @@
             !   (c) Lambda_ci criteria : 3                                     !
             !
             !------------------------------------------------------------------!
-            VS_CASE = 1
+            VS_CASE = 3
 
             !------------------------------------------------------------------!
             !                    Constants for LES filtering                   !
@@ -61,7 +65,7 @@
             Ny = 257
             Nz = 288
 
-            FW = 8     ! Filter width constant
+            FW = 16     ! Filter width constant
             tol = 1e-8 ! Tolerance for the number of nodes in x,z directions
 
             !------------------------------------------------------------------!
@@ -70,10 +74,14 @@
             ALLOCATE( X(1:Nx),Y(1:Ny),Z(1:Nz),dy(1:Ny-1) )
             ALLOCATE( U(1:Nx,1:Ny,1:Nz), V(1:Nx,1:Ny,1:Nz), W(1:Nx,1:Ny,1:Nz) )
             ALLOCATE( U_Fil(1:Nx,1:Ny,1:Nz), V_Fil(1:Nx,1:Ny,1:Nz),             &
-                      W_Fil(1:Nx,1:Ny,1:Nz), VS(1:Nx,1:Ny,1:Nz)                 )
+                      W_Fil(1:Nx,1:Ny,1:Nz), VS(1:Nx,1:Ny,1:Nz),                &
+                      U_Fil_2(1:Nx,1:Ny,1:Nz), V_Fil_2(1:Nx,1:Ny,1:Nz),         &
+                      W_Fil_2(1:Nx,1:Ny,1:Nz), Cs(1:Nx,1:Ny,1:Nz)             )
             ALLOCATE(Resi_T(1:Nx,1:Ny,1:Nz,1:3,1:3),NU_R(1:Nx,1:Ny,1:Nz,1:3,1:3))
             ALLOCATE(S_T(1:Nx,1:Ny,1:Nz,1:3,1:3),S_T_Fil(1:Nx,1:Ny,1:Nz,1:3,1:3))
             ALLOCATE(O_T(1:Nx,1:Ny,1:Nz,1:3,1:3),O_T_Fil(1:Nx,1:Ny,1:Nz,1:3,1:3))
+            ALLOCATE(S_T_Fil_2(1:Nx,1:Ny,1:Nz,1:3,1:3))
+            ALLOCATE(M_T(1:Nx,1:Ny,1:Nz,1:3,1:3),L_T(1:Nx,1:Ny,1:Nz,1:3,1:3))
 
             !------------------------------------------------------------------!
             !                         Initial Conditions                       !
@@ -93,11 +101,20 @@
             V_Fil(1:Nx,1:Ny,1:Nz) = 0.0
             W_Fil(1:Nx,1:Ny,1:Nz) = 0.0
 
+            Cs(1:Nx,1:Ny,1:Nz)      = 0.0
+            U_Fil_2(1:Nx,1:Ny,1:Nz) = 0.0
+            V_Fil_2(1:Nx,1:Ny,1:Nz) = 0.0
+            W_Fil_2(1:Nx,1:Ny,1:Nz) = 0.0
+
             Resi_T(1:Nx,1:Ny,1:Nz,1:3,1:3)  = 0.0
             S_T(1:Nx,1:Ny,1:Nz,1:3,1:3)     = 0.0
             S_T_Fil(1:Nx,1:Ny,1:Nz,1:3,1:3) = 0.0
             O_T(1:Nx,1:Ny,1:Nz,1:3,1:3)     = 0.0
             O_T_Fil(1:Nx,1:Ny,1:Nz,1:3,1:3) = 0.0
             NU_R(1:Nx,1:Ny,1:Nz,1:3,1:3)    = 0.0
+
+            S_T_Fil_2(1:Nx,1:Ny,1:Nz,1:3,1:3)     = 0.0
+            L_T(1:Nx,1:Ny,1:Nz,1:3,1:3)           = 0.0
+            M_T(1:Nx,1:Ny,1:Nz,1:3,1:3)           = 0.0
 
         END SUBROUTINE SETUP

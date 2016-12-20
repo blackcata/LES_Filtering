@@ -104,7 +104,7 @@
               !----------------------------------------------------------------!
               !          Outputs for Residual-stress at Y+ = 5,30,200          !
               !----------------------------------------------------------------!
-              dir_name = 'RESULT/RESI'
+              dir_name = 'RESULT/RESIDUAL_STRESS'
 
               YP = [5,30,200]
 
@@ -234,14 +234,16 @@
                 path_name = TRIM(dir_name)//'/'//TRIM(file_name)
                 OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
                 WRITE(100,*)'VARIABLES = X,Z,NU_11,NU_12,NU_13,NU_21,NU_22,NU_23&
-                                            ,NU_31,NU_32,NU_33,NU'
+                                            ,NU_31,NU_32,NU_33,NU_R'
                 WRITE(100,"(2(A,I3,2X))")' ZONE  I = ',Nx,' K = ', Nz
 
                 J_loc = J_det(YP(it))
                 DO k = 1,Nz
                   DO i = 1,Nx
                     WRITE(100,"(12F15.9)") X(i),Z(k),NU_R(i,J_loc,k,1:3,1:3),   &
-                                           SUM(NU_R(i,J_loc,k,1:3,1:3))
+                    SUM(NU_R(i,J_loc,k,1:3,1:3)) - ( NU_R(i,J_loc,k,1,1) +      &
+                                                     NU_R(i,J_loc,k,2,2) +      &
+                                                     NU_R(i,J_loc,k,3,3) )
                   END DO
                 END DO
 
@@ -255,7 +257,7 @@
               path_name = TRIM(dir_name)//TRIM(file_name)
               OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
               WRITE(100,*)'VARIABLES = Y,NU_11,NU_12,NU_13,NU_21,NU_22,NU_23    &
-                                        ,NU_31,NU_32,NU_33'
+                                        ,NU_31,NU_32,NU_33,NU_R'
 
               DO j = 1,Ny
                 NU_R_ave(1:3,1:3) = 0.0
@@ -274,7 +276,8 @@
                 END DO
                 NU_R_ave(1:3,1:3) = NU_R_ave(1:3,1:3)/(Nx*Nz)
 
-                WRITE(100,"(11F15.9)")Y(j),NU_R_ave(1:3,1:3),SUM(NU_R_ave(1:3,1:3))
+                WRITE(100,"(11F15.9)")Y(j),NU_R_ave(1:3,1:3),                   &
+                SUM(NU_R_ave(1:3,1:3)) - (NU_R_ave(1,1)+NU_R_ave(2,2)+NU_R_ave(3,3))
 
               END DO
               CLOSE(100)

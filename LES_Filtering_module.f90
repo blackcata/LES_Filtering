@@ -64,12 +64,9 @@
               REAL(KIND=8) :: FIND_U
 
               SELECT CASE(v_i)
-                CASE(1)
-                  FIND_U = U(i,j,k)
-                CASE(2)
-                  FIND_U = V(i,j,k)
-                CASE(3)
-                  FIND_U = W(i,j,k)
+                CASE(1); FIND_U = U(i,j,k)
+                CASE(2); FIND_U = V(i,j,k)
+                CASE(3); FIND_U = W(i,j,k)
               END SELECT
 
             END FUNCTION FIND_U
@@ -82,12 +79,9 @@
               REAL(KIND=8) :: FIND_U_Fil
 
               SELECT CASE(v_i)
-                CASE(1)
-                  FIND_U_Fil = U_Fil(i,j,k)
-                CASE(2)
-                  FIND_U_Fil = V_Fil(i,j,k)
-                CASE(3)
-                  FIND_U_Fil = W_Fil(i,j,k)
+                CASE(1); FIND_U_Fil = U_Fil(i,j,k)
+                CASE(2); FIND_U_Fil = V_Fil(i,j,k)
+                CASE(3); FIND_U_Fil = W_Fil(i,j,k)
               END SELECT
 
             END FUNCTION FIND_U_Fil
@@ -101,12 +95,9 @@
               REAL(KIND=8) :: FIND_U_Fil_2
 
               SELECT CASE(v_i)
-                CASE(1)
-                  FIND_U_Fil_2 = U_Fil_2(i,j,k)
-                CASE(2)
-                  FIND_U_Fil_2 = V_Fil_2(i,j,k)
-                CASE(3)
-                  FIND_U_Fil_2 = W_Fil_2(i,j,k)
+                CASE(1); FIND_U_Fil_2 = U_Fil_2(i,j,k)
+                CASE(2); FIND_U_Fil_2 = V_Fil_2(i,j,k)
+                CASE(3); FIND_U_Fil_2 = W_Fil_2(i,j,k)
               END SELECT
 
             END FUNCTION FIND_U_Fil_2
@@ -119,21 +110,15 @@
               REAL(KIND=8) :: FIND_dU, U_ij(0:2,0:2,0:2)
 
               SELECT CASE(x_i)
-                CASE(1)
-                  U_ij(0:2,0:2,0:2) = U(i-1:i+1,j-1:j+1,k-1:k+1)
-                CASE(2)
-                  U_ij(0:2,0:2,0:2) = V(i-1:i+1,j-1:j+1,k-1:k+1)
-                CASE(3)
-                  U_ij(0:2,0:2,0:2) = W(i-1:i+1,j-1:j+1,k-1:k+1)
+                CASE(1); U_ij(0:2,0:2,0:2) = U(i-1:i+1,j-1:j+1,k-1:k+1)
+                CASE(2); U_ij(0:2,0:2,0:2) = V(i-1:i+1,j-1:j+1,k-1:k+1)
+                CASE(3); U_ij(0:2,0:2,0:2) = W(i-1:i+1,j-1:j+1,k-1:k+1)
               END SELECT
 
               SELECT CASE(x_j)
-                CASE(1)
-                  FIND_dU = (U_ij(2,1,1) - U_ij(0,1,1))
-                CASE(2)
-                  FIND_dU = (dy(j)*U_ij(1,2,1) - dy(j+1)*U_ij(1,0,1))
-                CASE(3)
-                  FIND_dU = (U_ij(1,1,2) - U_ij(1,1,0))
+                CASE(1); FIND_dU = (U_ij(2,1,1) - U_ij(0,1,1))
+                CASE(2); FIND_dU = (U_ij(1,2,1) - U_ij(1,0,1))
+                CASE(3); FIND_dU = (U_ij(1,1,2) - U_ij(1,1,0))
               END SELECT
 
             END FUNCTION FIND_dU
@@ -146,21 +131,15 @@
               REAL(KIND=8) :: FIND_dU_Fil, U_ij(0:2,0:2,0:2)
 
               SELECT CASE(x_i)
-                CASE(1)
-                  U_ij(0:2,0:2,0:2) = U_Fil(i-1:i+1,j-1:j+1,k-1:k+1)
-                CASE(2)
-                  U_ij(0:2,0:2,0:2) = V_Fil(i-1:i+1,j-1:j+1,k-1:k+1)
-                CASE(3)
-                  U_ij(0:2,0:2,0:2) = W_Fil(i-1:i+1,j-1:j+1,k-1:k+1)
+                CASE(1); U_ij(0:2,0:2,0:2) = U_Fil(i-1:i+1,j-1:j+1,k-1:k+1)
+                CASE(2); U_ij(0:2,0:2,0:2) = V_Fil(i-1:i+1,j-1:j+1,k-1:k+1)
+                CASE(3); U_ij(0:2,0:2,0:2) = W_Fil(i-1:i+1,j-1:j+1,k-1:k+1)
               END SELECT
 
               SELECT CASE(x_j)
-                CASE(1)
-                  FIND_dU_Fil = (U_ij(2,1,1) - U_ij(0,1,1))
-                CASE(2)
-                  FIND_dU_Fil = (dy(j)*U_ij(1,2,1) - dy(j+1)*U_ij(1,0,1))
-                CASE(3)
-                  FIND_dU_Fil = (U_ij(1,1,2) - U_ij(1,1,0))
+                CASE(1); FIND_dU_Fil = (U_ij(2,1,1) - U_ij(0,1,1))
+                CASE(2); FIND_dU_Fil = (U_ij(1,2,1) - U_ij(1,0,1))
+                CASE(3); FIND_dU_Fil = (U_ij(1,1,2) - U_ij(1,1,0))
               END SELECT
 
             END FUNCTION FIND_dU_Fil
@@ -173,21 +152,15 @@
               REAL(KIND=8) :: FIND_dU_Fil_2, U_ij(0:2,0:2,0:2)
 
               SELECT CASE(x_i)
-                CASE(1)
-                  U_ij(0:2,0:2,0:2) = U_Fil_2(i-1:i+1,j-1:j+1,k-1:k+1)
-                CASE(2)
-                  U_ij(0:2,0:2,0:2) = V_Fil_2(i-1:i+1,j-1:j+1,k-1:k+1)
-                CASE(3)
-                  U_ij(0:2,0:2,0:2) = W_Fil_2(i-1:i+1,j-1:j+1,k-1:k+1)
+                CASE(1); U_ij(0:2,0:2,0:2) = U_Fil_2(i-1:i+1,j-1:j+1,k-1:k+1)
+                CASE(2); U_ij(0:2,0:2,0:2) = V_Fil_2(i-1:i+1,j-1:j+1,k-1:k+1)
+                CASE(3); U_ij(0:2,0:2,0:2) = W_Fil_2(i-1:i+1,j-1:j+1,k-1:k+1)
               END SELECT
 
               SELECT CASE(x_j)
-                CASE(1)
-                  FIND_dU_Fil_2 = (U_ij(2,1,1) - U_ij(0,1,1))
-                CASE(2)
-                  FIND_dU_Fil_2 = (dy(j)*U_ij(1,2,1) - dy(j+1)*U_ij(1,0,1))
-                CASE(3)
-                  FIND_dU_Fil_2 = (U_ij(1,1,2) - U_ij(1,1,0))
+                CASE(1); FIND_dU_Fil_2 = (U_ij(2,1,1) - U_ij(0,1,1))
+                CASE(2); FIND_dU_Fil_2 = (U_ij(1,2,1) - U_ij(1,0,1))
+                CASE(3); FIND_dU_Fil_2 = (U_ij(1,1,2) - U_ij(1,1,0))
               END SELECT
 
             END FUNCTION FIND_dU_Fil_2
@@ -200,12 +173,9 @@
               REAL(KIND=8) :: FIND_dx
 
               SELECT CASE(x_j)
-                CASE(1)
-                  FIND_dx = 2*dx
-                CASE(2)
-                  FIND_dx = (dy(j)+dy(j+1))
-                CASE(3)
-                  FIND_dx = 2*dz
+                CASE(1); FIND_dx = 2*dx
+                CASE(2); FIND_dx = (dy(j)+dy(j+1))
+                CASE(3); FIND_dx = 2*dz
               END SELECT
 
             END FUNCTION FIND_dx
