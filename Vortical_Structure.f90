@@ -28,7 +28,8 @@
           INTEGER :: i,j,k,x_i,x_j,INFO,LWORK,LDA,LWMAX
           REAL(KIND=8) :: time_sta, time_end, dU_i, dU_j, dx_i, dx_j, P, Q, R   &
                                             , Q_hat, R_hat, Delta, det, tr
-          REAL(KIND=8) :: D_T_tmp(3,3), Q_loc(3,3), DD(3,3), WORK(1000), EIG_R(3)
+          REAL(KIND=8) :: D_T_tmp(3,3), Q_loc(3,3), DD(3,3), WORK(1000), EIG_R(3)&
+                         ,S_T_tmp(3,3), O_T_tmp(3,3)
           COMPLEX(KIND=8) :: eig(3)
 
           WRITE(*,*) '----------------------------------------------------'
@@ -68,19 +69,16 @@
           !--------------------------------------------------------------------!
             LWMAX = 1000
 
-            !$OMP PARALLEL DO private(k,j,i,D_T_tmp,eig,x_i,x_j,LDA,WORK,LWORK,INFO)
+            !$OMP PARALLEL DO private(k,j,i,D_T_tmp,eig,x_i,x_j,LDA,WORK,LWORK,INFO,S_T_tmp,O_T_tmp)
             DO k = 2,Nz-1
               DO j = 2,Ny-1
                 DO i = 2,Nx-1
 
+                  CALL MMDOT(S_T(i,j,k,1:3,1:3),S_T(i,j,k,1:3,1:3),S_T_tmp(1:3,1:3),3)
+                  CALL MMDOT(O_T(i,j,k,1:3,1:3),O_T(i,j,k,1:3,1:3),O_T_tmp(1:3,1:3),3)
                   DO x_j = 1,3
                     DO x_i = 1,3
-                      IF (x_j <= x_i) THEN
-                      D_T_tmp(x_i,x_j) = S_T(i,j,k,x_i,x_j)**2 +                  &
-                                         O_T(i,j,k,x_i,x_j)**2
-                      ELSE
-                        D_T_tmp(x_i,x_j) = 0.0
-                      END IF
+                      D_T_tmp(x_i,x_j) = S_T_tmp(x_i,x_j) + O_T_tmp(x_i,x_j)
                     END DO
                   END DO
 
@@ -89,7 +87,8 @@
                   ! LWORK = MIN( LWMAX, INT( WORK( 1 ) ) )
                   ! CALL DSYEV('N','U',3,D_T_tmp,3,EIG_R,WORK,LWORK,INFO)
                   ! VS(i,j,k) = EIG_R(2)
-
+                  
+                  ! WRITE(*,"(3I,6F15.9)") i,j,k,REAL(eig(1:3)),AIMAG(eig(1:3))
                   CALL EIG33(D_T_tmp,eig)
                   VS(i,j,k) = REAL(eig(2))
 
