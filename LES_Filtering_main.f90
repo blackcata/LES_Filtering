@@ -13,15 +13,19 @@
 !------------------------------------------------------------------------------!
 
         PROGRAM LES_FILTERING
+          USE LES_FILTERING_module,                                           &
+              ONLY : FILTER_OX
 
           IMPLICIT NONE
           REAL(KIND=8) :: time_sta, time_end
 
           CALL SETUP
           CALL READ_DNS
+
+          IF ( FILTER_OX > 0) CALL FILTER
+          IF ( FILTER_OX > 1) CALL SECOND_FILTER
+
           CALL VORTICAL_STRUCTURE
-          CALL FILTER
-          CALL SECOND_FILTER
           CALL OUTPUT
 
         END PROGRAM LES_FILTERING

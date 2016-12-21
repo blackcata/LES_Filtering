@@ -12,7 +12,7 @@
 
             USE LES_FILTERING_module,                                           &
                 ONLY : Nx, Ny, Nz, dx, dz, FW, pi, tol,                         &
-                       file_name, dir_name, path_name, VS_CASE
+                       file_name, dir_name, path_name, VS_CASE, FILTER_OX
 
             USE LES_FILTERING_module,                                           &
                 ONLY : X, Y, Z, dy, U, V, W, U_Fil, V_Fil, W_Fil,               &
@@ -54,9 +54,19 @@
             !   (a) Q-criteria         : 1                                     !
             !   (b) Lambda_2 criteria  : 2                                     !
             !   (c) Lambda_ci criteria : 3                                     !
-            !
+            !                                                                  !
             !------------------------------------------------------------------!
-            VS_CASE = 3
+            VS_CASE = 1
+
+            !------------------------------------------------------------------!
+            !                       The number of Filter                       !
+            !                                                                  !
+            !   (a) No-Filter     : 0                                          !
+            !   (b) First Filter  : 1                                          !
+            !   (c) Second Filter : 2                                          !
+            !                                                                  !
+            !------------------------------------------------------------------!
+            FILTER_OX = 1
 
             !------------------------------------------------------------------!
             !                    Constants for LES filtering                   !
@@ -65,7 +75,7 @@
             Ny = 257
             Nz = 288
 
-            FW = 16     ! Filter width constant
+            FW = 4     ! Filter width constant
             tol = 1e-8 ! Tolerance for the number of nodes in x,z directions
 
             !------------------------------------------------------------------!
