@@ -11,7 +11,7 @@
         SUBROUTINE SETUP
 
             USE LES_FILTERING_module,                                           &
-                ONLY : Nx, Ny, Nz, dx, dz, FW, pi, tol,                         &
+                ONLY : N, Nx, Ny, Nz, dx, dz, FW, pi, tol,                      &
                        file_name, dir_name, path_name, VS_CASE, FILTER_OX,      &
                        VS_ONLY, Y_ORDER
 
@@ -21,7 +21,7 @@
                        L_T, M_T, U_Fil_2, V_Fil_2, W_Fil_2, S_T_Fil_2, Cs, YP
 
             IMPLICIT NONE
-            INTEGER :: i,j,k,N
+            INTEGER :: i,j,k
 
             pi = atan(1.0)*4
 
@@ -54,6 +54,9 @@
             !                          Statistic type                          !
             !                                                                  !
             !   (a) All Statistic             : 0                              !
+            !       - U, STRAIN_RATE, ROTATION_RATE, RESIDUAL_STRESS           !
+            !       - EDDY_VISCOSITY, SMARGORINSKY_COEFFICIENT                 !
+            !       - VORTICAL_STRUCTURE                                       !
             !   (b) Excpet Vortical Structure : 1                              !
             !   (c) Only Vortical Structure   : 2                              !
             !                                                                  !
@@ -87,13 +90,13 @@
             !   (b) Descending Order : 1                                       !
             !                                                                  !
             !------------------------------------------------------------------!
-            Y_ORDER = 0
+            Y_ORDER = 1
 
             !------------------------------------------------------------------!
             !                       Statistic Slice Point                      !
             !                                                                  !
             !    N  : Total Number of Slice Point                              !
-            !    YP : Slice Point Position                                     !
+            !    YP : Slice Point Position of Y+                               !
             !                                                                  !
             !------------------------------------------------------------------!
             N = 3

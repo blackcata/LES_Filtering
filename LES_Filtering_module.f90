@@ -11,7 +11,7 @@
         MODULE LES_FILTERING_module
 
           IMPLICIT NONE
-          INTEGER :: Nx, Ny, Nz, Nx_fil, Nz_fil, VS_CASE, FILTER_OX, VS_ONLY,   &
+          INTEGER :: N, Nx, Ny, Nz, Nx_fil, Nz_fil, VS_CASE, FILTER_OX, VS_ONLY,&
                      Y_ORDER
           REAL(KIND=8) :: Del,dx,dz,FW,pi,tol
           CHARACTER(LEN=65) :: file_name, dir_name, path_name

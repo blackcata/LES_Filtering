@@ -12,18 +12,18 @@
                   ONLY : J_det
 
               USE LES_FILTERING_module,                                         &
-                  ONLY : Nx, Ny, Nz, file_name, dir_name, path_name, VS_CASE,   &
-                         VS_ONLY
+                  ONLY : N, Nx, Ny, Nz, file_name, dir_name, path_name,         &
+                         VS_CASE, VS_ONLY
 
               USE LES_FILTERING_module,                                         &
                   ONLY : X, Y, Z, U, V, W, U_Fil, V_Fil, W_Fil, dy, Resi_T,     &
-                         S_T, S_T_Fil, NU_R, Cs, VS, YP
+                         S_T, S_T_Fil, O_T, O_T_Fil, NU_R, Cs, VS, YP
 
               IMPLICIT NONE
               INTEGER :: i,j,k,it,J_loc,v_i,v_j
               REAL(KIND=8) :: time_sta, time_end, U_ave, V_ave, W_ave, Cs_ave
               REAL(KIND=8) :: RESI_ave(1:3,1:3), NU_R_ave(1:3,1:3)              &
-                             ,S_T_ave(1:3,1:3,1:2)
+                             ,S_T_ave(1:3,1:3,1:2), O_T_ave(1:3,1:3,1:2)
 
               WRITE(*,*) '----------------------------------------------------'
               WRITE(*,*) '              WRITING PROCESS STARTED               '
@@ -55,7 +55,7 @@
               !----------------------------------------------------------------!
               !            Outputs for instaneous U at Y+ = 5,30,200           !
               !----------------------------------------------------------------!
-              DO it = 1,3
+              DO it = 1,N
 
                 WRITE(file_name,"(I3.3,A)")INT(YP(it)),'.U_slice.plt'
                 path_name = TRIM(dir_name)//'/'//TRIM(file_name)
@@ -108,7 +108,7 @@
               !----------------------------------------------------------------!
               dir_name = 'RESULT/RESIDUAL_STRESS'
 
-              DO it = 1,3
+              DO it = 1,N
 
                 WRITE(file_name,"(I3.3,A)")INT(YP(it)),'.Resi_slice.plt'
                 path_name = TRIM(dir_name)//'/'//TRIM(file_name)
@@ -161,7 +161,7 @@
               !----------------------------------------------------------------!
               dir_name = 'RESULT/STRAIN_RATE'
 
-              DO it = 1,3
+              DO it = 1,N
 
                 WRITE(file_name,"(I3.3,A)")INT(YP(it)),'.S_T_slice.plt'
                 path_name = TRIM(dir_name)//'/'//TRIM(file_name)
@@ -219,14 +219,77 @@
 
               END DO
               CLOSE(100)
-              WRITE(*,*) "S_T_AV COMPLETED"
+
+              !----------------------------------------------------------------!
+              !              Outputs for Rotation Rate at Y+ = 5,30,200          !
+              !----------------------------------------------------------------!
+              dir_name = 'RESULT/ROTATION_RATE'
+
+              DO it = 1,N
+
+                WRITE(file_name,"(I3.3,A)")INT(YP(it)),'.O_T_slice.plt'
+                path_name = TRIM(dir_name)//'/'//TRIM(file_name)
+                OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
+                WRITE(100,*)'VARIABLES = X,Z,O_11,O_12,O_13,O_21,O_22,O_23'      &
+                                         //',O_31,O_32,O_33,O_Fil_11,O_Fil_12'   &
+                                         //',O_Fil_13,O_Fil_21,O_Fil_22,O_Fil_23'&
+                                         //',O_Fil_31,O_Fil_32,O_Fil_33,O'
+                WRITE(100,"(2(A,I3,2X))")' ZONE  I = ',Nx,' K = ', Nz
+
+                J_loc = J_det(YP(it))
+                DO k = 1,Nz
+                  DO i = 1,Nx
+                    WRITE(100,"(21F15.9)") X(i),Z(k),O_T(i,J_loc,k,1:3,1:3),    &
+                                           O_T_Fil(i,J_loc,k,1:3,1:3),          &
+                                           SUM(O_T_Fil(i,J_loc,k,1:3,1:3))
+                  END DO
+                END DO
+
+                CLOSE(100)
+              END DO
+
+              !----------------------------------------------------------------!
+              !       Outputs for Averaged rotation rate on x,z directions     !
+              !----------------------------------------------------------------!
+              file_name = '/O_T_averaged_profile.plt'
+              path_name = TRIM(dir_name)//TRIM(file_name)
+              OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
+              WRITE(100,*)'VARIABLES =  Y,O_11,O_12,O_13,O_21,O_22,O_23'        &
+                                       //',O_31,O_32,O_33,O_Fil_11,O_Fil_12'    &
+                                       //',O_Fil_13,O_Fil_21,O_Fil_22,O_Fil_23' &
+                                       //',O_Fil_31,O_Fil_32,O_Fil_33,O'
+
+              DO j = 2,Ny-1
+                O_T_ave(1:3,1:3,1:2) = 0.0
+
+                DO k = 2,Nz-1
+                  DO i = 2,Nx-1
+
+                    DO v_i = 1,3
+                      DO v_j = 1,3
+                        O_T_ave(v_i,v_j,1) = O_T_ave(v_i,v_j,1)                 &
+                                           + O_T(i,j,k,v_i,v_j)
+                        O_T_ave(v_i,v_j,2) = O_T_ave(v_i,v_j,2)                 &
+                                           + O_T_Fil(i,j,k,v_i,v_j)
+                      END DO
+                    END DO
+
+                  END DO
+                END DO
+                O_T_ave(1:3,1:3,1:2) = O_T_ave(1:3,1:3,1:2)/(Nx*Nz)
+
+                WRITE(100,"(20F15.9)")Y(j),O_T_ave(1:3,1:3,1),                  &
+                                      O_T_ave(1:3,1:3,2),SUM(O_T_ave(1:3,1:3,2))
+
+              END DO
+              CLOSE(100)
 
               !----------------------------------------------------------------!
               !            Outputs for eddy-viscosity at Y+ = 5,30,200         !
               !----------------------------------------------------------------!
               dir_name = 'RESULT/EDDY_VISCOSITY'
 
-              DO it = 1,3
+              DO it = 1,N
 
                 WRITE(file_name,"(I3.3,A)")INT(YP(it)),'.NU_R_slice.plt'
                 path_name = TRIM(dir_name)//'/'//TRIM(file_name)
@@ -285,7 +348,7 @@
               !----------------------------------------------------------------!
               dir_name = 'RESULT/SMARGORINSKY_COEFFICIENT'
 
-              DO it = 1,3
+              DO it = 1,N
 
                 WRITE(file_name,"(I3.3,A)")INT(YP(it)),'.CS_slice.plt'
                 path_name = TRIM(dir_name)//'/'//TRIM(file_name)
@@ -331,28 +394,28 @@
               !               Outputs for Vortical Structures                  !
               !----------------------------------------------------------------!
               IF ( mod(VS_ONLY,2) == 0 ) THEN
-              dir_name = 'RESULT/VORTICAL_STRUCTURE'
+                dir_name = 'RESULT/VORTICAL_STRUCTURE'
 
-              file_name = '/VORTICAL_STRUCTURE.plt'
-              path_name = TRIM(dir_name)//TRIM(file_name)
-              OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
+                file_name = '/VORTICAL_STRUCTURE.plt'
+                path_name = TRIM(dir_name)//TRIM(file_name)
+                OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
 
-              SELECT CASE(VS_CASE)
-                CASE(1) ; WRITE(100,*) 'VARIABLES = X,Y,Z,Q'
-                CASE(2);  WRITE(100,*) 'VARIABLES = X,Y,Z,Lambda_2'
-                CASE(3) ; WRITE(100,*) 'VARIABLES = X,Y,Z,Lambda_ci'
-              END SELECT
+                SELECT CASE(VS_CASE)
+                  CASE(1) ; WRITE(100,*) 'VARIABLES = X,Y,Z,Q'
+                  CASE(2) ; WRITE(100,*) 'VARIABLES = X,Y,Z,Lambda_2'
+                  CASE(3) ; WRITE(100,*) 'VARIABLES = X,Y,Z,Lambda_ci'
+                END SELECT
 
-              WRITE(100,"(3(A,I3,2X))")                                         &
+                WRITE(100,"(3(A,I3,2X))")                                       &
                                   ' ZONE  I = ',Nx-2,' J = ',Ny-2, ' K = ', Nz-2
-              DO k = 2,Nz-1
-                DO j = 2,Ny-1
-                  DO i = 2,Nx-1
-                    WRITE(100,"(4F15.9)") X(i),Y(j),Z(k),VS(i,j,k)
+                DO k = 2,Nz-1
+                  DO j = 2,Ny-1
+                    DO i = 2,Nx-1
+                      WRITE(100,"(4F15.9)") X(i),Y(j),Z(k),VS(i,j,k)
+                    END DO
                   END DO
                 END DO
-              END DO
-              CLOSE(100)
+                CLOSE(100)
 
               END IF
 
