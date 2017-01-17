@@ -28,8 +28,8 @@
             !------------------------------------------------------------------!
             !                  Make & Initialize Result folder                 !
             !------------------------------------------------------------------!
-            ! file_name = 'instantaneous_velocity_field_re644.plt'
-            file_name = 'INSU_XYZ.plt'
+            file_name = 'instantaneous_velocity_field_re644.plt'
+            ! file_name = 'INSU_XYZ.plt'
             dir_name  = 'RESULT'
 
             CALL SYSTEM('mkdir '//TRIM(dir_name))
@@ -58,7 +58,7 @@
             !   (c) Only Vortical Structure   : 2                              !
             !                                                                  !
             !------------------------------------------------------------------!
-            VS_ONLY = 2
+            VS_ONLY = 1
 
             !------------------------------------------------------------------!
             !                    Vortical Structure methods                    !
@@ -103,9 +103,9 @@
             !------------------------------------------------------------------!
             !                    Constants for LES filtering                   !
             !------------------------------------------------------------------!
-            Nx = 128
-            Ny = 191
-            Nz = 159
+            Nx = 288
+            Ny = 257
+            Nz = 288
 
             FW = 4     ! Filter width constant
             tol = 1e-8 ! Tolerance for the number of nodes in x,z directions

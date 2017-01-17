@@ -13,8 +13,8 @@
 !------------------------------------------------------------------------------!
 
         PROGRAM LES_FILTERING
-          USE LES_FILTERING_module,                                           &
-              ONLY : FILTER_OX
+          USE LES_FILTERING_module,                                             &
+              ONLY : FILTER_OX, VS_ONLY
 
           IMPLICIT NONE
           REAL(KIND=8) :: time_sta, time_end
@@ -25,7 +25,8 @@
           IF ( FILTER_OX > 0) CALL FILTER
           IF ( FILTER_OX > 1) CALL SECOND_FILTER
 
-          CALL VORTICAL_STRUCTURE
+          IF ( mod(VS_ONLY,2) == 0 ) CALL VORTICAL_STRUCTURE
+
           CALL OUTPUT
 
         END PROGRAM LES_FILTERING
