@@ -87,7 +87,7 @@
                   ! LWORK = MIN( LWMAX, INT( WORK( 1 ) ) )
                   ! CALL DSYEV('N','U',3,D_T_tmp,3,EIG_R,WORK,LWORK,INFO)
                   ! VS(i,j,k) = EIG_R(2)
-                  
+
                   ! WRITE(*,"(3I,6F15.9)") i,j,k,REAL(eig(1:3)),AIMAG(eig(1:3))
                   CALL EIG33(D_T_tmp,eig)
                   VS(i,j,k) = REAL(eig(2))

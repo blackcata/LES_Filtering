@@ -11,11 +11,12 @@
         MODULE LES_FILTERING_module
 
           IMPLICIT NONE
-          INTEGER :: Nx, Ny, Nz, Nx_fil, Nz_fil, VS_CASE, FILTER_OX
+          INTEGER :: Nx, Ny, Nz, Nx_fil, Nz_fil, VS_CASE, FILTER_OX, VS_ONLY,   &
+                     Y_ORDER
           REAL(KIND=8) :: Del,dx,dz,FW,pi,tol
           CHARACTER(LEN=65) :: file_name, dir_name, path_name
 
-          REAL(KIND=8),DIMENSION(:),ALLOCATABLE :: X,Y,Z,dy
+          REAL(KIND=8),DIMENSION(:),ALLOCATABLE :: X,Y,Z,dy,YP
           REAL(KIND=8),DIMENSION(:,:,:),ALLOCATABLE :: U,V,W,U_Fil,V_Fil,W_Fil, &
                                                        U_Fil_2,V_Fil_2,W_Fil_2, &
                                                        VS,Cs

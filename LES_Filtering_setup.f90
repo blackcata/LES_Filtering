@@ -12,22 +12,24 @@
 
             USE LES_FILTERING_module,                                           &
                 ONLY : Nx, Ny, Nz, dx, dz, FW, pi, tol,                         &
-                       file_name, dir_name, path_name, VS_CASE, FILTER_OX
+                       file_name, dir_name, path_name, VS_CASE, FILTER_OX,      &
+                       VS_ONLY, Y_ORDER
 
             USE LES_FILTERING_module,                                           &
                 ONLY : X, Y, Z, dy, U, V, W, U_Fil, V_Fil, W_Fil,               &
                        Resi_T, S_T, S_T_Fil, NU_R, O_T, O_T_Fil, VS,            &
-                       L_T, M_T, U_Fil_2, V_Fil_2, W_Fil_2, S_T_Fil_2, Cs
+                       L_T, M_T, U_Fil_2, V_Fil_2, W_Fil_2, S_T_Fil_2, Cs, YP
 
             IMPLICIT NONE
-            INTEGER :: i,j,k
+            INTEGER :: i,j,k,N
 
             pi = atan(1.0)*4
 
             !------------------------------------------------------------------!
             !                  Make & Initialize Result folder                 !
             !------------------------------------------------------------------!
-            file_name = 'instantaneous_velocity_field_re644.plt'
+            ! file_name = 'instantaneous_velocity_field_re644.plt'
+            file_name = 'INSU_XYZ.plt'
             dir_name  = 'RESULT'
 
             CALL SYSTEM('mkdir '//TRIM(dir_name))
@@ -49,6 +51,16 @@
             CALL SYSTEM('rm -rf ./'//TRIM(dir_name)//'/SMARGORINSKY_COEFFICIENT'//'/*.plt')
 
             !------------------------------------------------------------------!
+            !                          Statistic type                          !
+            !                                                                  !
+            !   (a) All Statistic             : 0                              !
+            !   (b) Excpet Vortical Structure : 1                              !
+            !   (c) Only Vortical Structure   : 2                              !
+            !                                                                  !
+            !------------------------------------------------------------------!
+            VS_ONLY = 2
+
+            !------------------------------------------------------------------!
             !                    Vortical Structure methods                    !
             !                                                                  !
             !   (a) Q-criteria         : 1                                     !
@@ -56,7 +68,7 @@
             !   (c) Lambda_ci criteria : 3                                     !
             !                                                                  !
             !------------------------------------------------------------------!
-            VS_CASE = 1
+            VS_CASE = 2
 
             !------------------------------------------------------------------!
             !                       The number of Filter                       !
@@ -66,14 +78,34 @@
             !   (c) Second Filter : 2                                          !
             !                                                                  !
             !------------------------------------------------------------------!
-            FILTER_OX = 1
+            FILTER_OX = 0
+
+            !------------------------------------------------------------------!
+            !                         Y sorting order                          !
+            !                                                                  !
+            !   (a) Ascending Order  : 0                                       !
+            !   (b) Descending Order : 1                                       !
+            !                                                                  !
+            !------------------------------------------------------------------!
+            Y_ORDER = 0
+
+            !------------------------------------------------------------------!
+            !                       Statistic Slice Point                      !
+            !                                                                  !
+            !    N  : Total Number of Slice Point                              !
+            !    YP : Slice Point Position                                     !
+            !                                                                  !
+            !------------------------------------------------------------------!
+            N = 3
+            ALLOCATE( YP(1:N) )
+            YP = [5,30,200]
 
             !------------------------------------------------------------------!
             !                    Constants for LES filtering                   !
             !------------------------------------------------------------------!
-            Nx = 288
-            Ny = 257
-            Nz = 288
+            Nx = 128
+            Ny = 191
+            Nz = 159
 
             FW = 4     ! Filter width constant
             tol = 1e-8 ! Tolerance for the number of nodes in x,z directions

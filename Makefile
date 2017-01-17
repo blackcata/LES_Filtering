@@ -1,5 +1,5 @@
 F90=ifort
-FCFLAGS=-O3 -qopenmp -I${MKL_HOME}/include -L${MKL_HOME}/lib -lmkl_intel_lp64   \
+FCFLAGS=-O3 -qopenmp#-I${MKL_HOME}/include/intel64/ilp64 -L${MKL_HOME}/lib -lmkl_intel_lp64   \
 										 -lmkl_intel_thread -lmkl_core -lpthread
 
 TARGET= LES_Filtering

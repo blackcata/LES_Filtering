@@ -15,7 +15,7 @@
 
           USE LES_FILTERING_module,                                             &
               ONLY : Nx, Ny, Nz, dx, dz, Del, FW, tol, Nx_fil, Nz_fil,          &
-                     file_name, dir_name, path_name
+                     file_name, dir_name, path_name, Y_order
 
           USE LES_FILTERING_module,                                             &
               ONLY : X, Y, Z, U, V, W, dy, S_T, O_T
@@ -41,18 +41,35 @@
           !--------------------------------------------------------------------!
           !                   Main loop of reading DNS datas                   !
           !--------------------------------------------------------------------!
-          DO k = 1,Nz
-            DO j = Ny,1,-1
-              DO i = 1,Nx
-                READ(100,*) tmp_x, tmp_y, tmp_z, U(i,j,k), V(i,j,k), W(i,j,k)
+          IF ( Y_ORDER == 0 ) THEN
 
-                IF (j==1 .AND. k==1) X(i)      = tmp_x
-                IF (i==1 .AND. k==1) Y(j)      = tmp_y
-                IF (i==1 .AND. j==1) Z(k)      = tmp_z
+            DO k = 1,Nz
+              DO j = 1,Ny
+                DO i = 1,Nx
+                  READ(100,*) tmp_x, tmp_y, tmp_z, U(i,j,k), V(i,j,k), W(i,j,k)
+
+                  IF (j==1 .AND. k==1) X(i)      = tmp_x
+                  IF (i==1 .AND. k==1) Y(j)      = tmp_y
+                  IF (i==1 .AND. j==1) Z(k)      = tmp_z
+                END DO
               END DO
             END DO
-          END DO
 
+          ELSE
+
+            DO k = 1,Nz
+              DO j = Ny,1,-1
+                DO i = 1,Nx
+                  READ(100,*) tmp_x, tmp_y, tmp_z, U(i,j,k), V(i,j,k), W(i,j,k)
+
+                  IF (j==1 .AND. k==1) X(i)      = tmp_x
+                  IF (i==1 .AND. k==1) Y(j)      = tmp_y
+                  IF (i==1 .AND. j==1) Z(k)      = tmp_z
+                END DO
+              END DO
+            END DO
+
+          END IF
           CLOSE(100)
 
           !--------------------------------------------------------------------!

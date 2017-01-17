@@ -12,47 +12,49 @@
                   ONLY : J_det
 
               USE LES_FILTERING_module,                                         &
-                  ONLY : Nx, Ny, Nz, file_name, dir_name, path_name, VS_CASE
+                  ONLY : Nx, Ny, Nz, file_name, dir_name, path_name, VS_CASE,   &
+                         VS_ONLY
 
               USE LES_FILTERING_module,                                         &
                   ONLY : X, Y, Z, U, V, W, U_Fil, V_Fil, W_Fil, dy, Resi_T,     &
-                         S_T, S_T_Fil, NU_R, Cs, VS
+                         S_T, S_T_Fil, NU_R, Cs, VS, YP
 
               IMPLICIT NONE
               INTEGER :: i,j,k,it,J_loc,v_i,v_j
               REAL(KIND=8) :: time_sta, time_end, U_ave, V_ave, W_ave, Cs_ave
-              REAL(KIND=8) :: YP(1:3), RESI_ave(1:3,1:3), NU_R_ave(1:3,1:3)     &
+              REAL(KIND=8) :: RESI_ave(1:3,1:3), NU_R_ave(1:3,1:3)              &
                              ,S_T_ave(1:3,1:3,1:2)
 
               WRITE(*,*) '----------------------------------------------------'
               WRITE(*,*) '              WRITING PROCESS STARTED               '
               CALL CPU_TIME(time_sta)
 
+              IF (VS_ONLY - 2 < 0) THEN
+
               !----------------------------------------------------------------!
-              !                Outputs for U_Fil(Filtered velocity)
+              !                Outputs for U_Fil(Filtered velocity)            !
               !----------------------------------------------------------------!
               dir_name = 'RESULT/U'
 
-              ! file_name = '/U_filtered.plt'
-              ! path_name = TRIM(dir_name)//TRIM(file_name)
-              ! OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
-              ! WRITE(100,*) 'VARIABLES = X,Y,Z,U_fil,V_Fil,W_Fil'
-              ! WRITE(100,"(3(A,I3,2X))")' ZONE  I = ',Nx,' J = ',Ny, ' K = ', Nz
-              ! DO k = 1,Nz
-              !   DO j = 1,Ny
-              !     DO i = 1,Nx
-              !       WRITE(100,"(6F15.9)") X(i),Y(j),Z(k),                       &
-              !                             U_fil(i,j,k),V_Fil(i,j,k),W_Fil(i,j,k)
-              !     END DO
-              !   END DO
-              ! END DO
-              ! CLOSE(100)
+              file_name = '/U_filtered.plt'
+              path_name = TRIM(dir_name)//TRIM(file_name)
+
+              OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
+              WRITE(100,*) 'VARIABLES = X,Y,Z,U_fil,V_Fil,W_Fil'
+              WRITE(100,"(3(A,I3,2X))")' ZONE  I = ',Nx,' J = ',Ny, ' K = ', Nz
+              DO k = 1,Nz
+                DO j = 1,Ny
+                  DO i = 1,Nx
+                    WRITE(100,"(6F15.9)") X(i),Y(j),Z(k),                       &
+                                          U_fil(i,j,k),V_Fil(i,j,k),W_Fil(i,j,k)
+                  END DO
+                END DO
+              END DO
+              CLOSE(100)
 
               !----------------------------------------------------------------!
               !            Outputs for instaneous U at Y+ = 5,30,200           !
               !----------------------------------------------------------------!
-              YP = [5,30,200]
-
               DO it = 1,3
 
                 WRITE(file_name,"(I3.3,A)")INT(YP(it)),'.U_slice.plt'
@@ -106,8 +108,6 @@
               !----------------------------------------------------------------!
               dir_name = 'RESULT/RESIDUAL_STRESS'
 
-              YP = [5,30,200]
-
               DO it = 1,3
 
                 WRITE(file_name,"(I3.3,A)")INT(YP(it)),'.Resi_slice.plt'
@@ -160,8 +160,6 @@
               !              Outputs for Strain Rate at Y+ = 5,30,200          !
               !----------------------------------------------------------------!
               dir_name = 'RESULT/STRAIN_RATE'
-
-              YP = [5,30,200]
 
               DO it = 1,3
 
@@ -221,12 +219,12 @@
 
               END DO
               CLOSE(100)
+              WRITE(*,*) "S_T_AV COMPLETED"
+
               !----------------------------------------------------------------!
               !            Outputs for eddy-viscosity at Y+ = 5,30,200         !
               !----------------------------------------------------------------!
               dir_name = 'RESULT/EDDY_VISCOSITY'
-
-              YP = [5,30,200]
 
               DO it = 1,3
 
@@ -282,14 +280,10 @@
               END DO
               CLOSE(100)
 
-              CALL CPU_TIME(time_end)
-
               !----------------------------------------------------------------!
               !      Outputs for Smagorinsky coefficient at Y+ = 5,30,200      !
               !----------------------------------------------------------------!
               dir_name = 'RESULT/SMARGORINSKY_COEFFICIENT'
-
-              YP = [5,30,200]
 
               DO it = 1,3
 
@@ -332,9 +326,11 @@
               END DO
               CLOSE(100)
 
+              END IF
               !----------------------------------------------------------------!
               !               Outputs for Vortical Structures                  !
               !----------------------------------------------------------------!
+              IF ( mod(VS_ONLY,2) == 0 ) THEN
               dir_name = 'RESULT/VORTICAL_STRUCTURE'
 
               file_name = '/VORTICAL_STRUCTURE.plt'
@@ -358,6 +354,8 @@
               END DO
               CLOSE(100)
 
+              END IF
+
               CALL CPU_TIME(time_end)
 
               WRITE(*,*) '           WRITING PROCESS IS COMPLETED            '
@@ -365,6 +363,6 @@
               WRITE(*,*) '----------------------------------------------------'
               WRITE(*,*) ''
 
-              DEALLOCATE(X,Y,Z,U,V,W,U_Fil,V_Fil,W_Fil,dy,S_T,S_T_Fil)
+              DEALLOCATE(X,Y,Z,U,V,W,U_Fil,V_Fil,W_Fil,dy,S_T,S_T_Fil,YP)
 
           END SUBROUTINE OUTPUT
