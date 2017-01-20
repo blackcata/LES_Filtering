@@ -9,8 +9,10 @@ Second it is used to get vortical structures from three different identification
   - Lambda_2 criteria ( Jeong.1995 )
   - Lambda_ci criteria ( Zhou.1999 )
 
-Related report is posted on https://www.dropbox.com/s/3b180nsfyvw7gkj/report.pdf?dl=0. 
-Example data for DNS_data is posted on https://www.dropbox.com/s/241nuubybzb8tgg/instantaneous_velocity_field_re644.plt?dl=0. This data's size is about 2 GB.
+### 0. Related papers & data 
+  - Related paper : https://www.dropbox.com/s/osqskke88qgzow7/Turbulence%20Modeling%20-%20Project2.pdf?dl=0 
+  - Related report : https://www.dropbox.com/s/3b180nsfyvw7gkj/report.pdf?dl=0
+  - Example data : https://www.dropbox.com/s/241nuubybzb8tgg/instantaneous_velocity_field_re644.plt?dl=0
 
 ### 1. Setting for LES_Filtering code
   - Make 'RESULT' folder 
