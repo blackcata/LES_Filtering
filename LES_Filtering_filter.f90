@@ -1,12 +1,12 @@
 !------------------------------------------------------------------------------!
-!
-!   PROGRAM : LES_Filtering_filter.f90
-!
-!   PURPOSE : Filter datas from the DNS data for turbulent channel flow
-!             using Gaussian filter.
-!
-!                                                             2016.12.07 K.Noh
-!
+!                                                                              !
+!   PROGRAM : LES_Filtering_filter.f90                                         !
+!                                                                              !
+!   PURPOSE : Filter datas from the DNS data for turbulent channel flow        !
+!             using Gaussian filter.                                           !
+!                                                                              !
+!                                                             2016.12.07 K.Noh !
+!                                                                              !
 !------------------------------------------------------------------------------!
 
         SUBROUTINE FILTER

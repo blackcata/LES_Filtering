@@ -1,18 +1,18 @@
 !------------------------------------------------------------------------------!
-!
-!   PROGRAM : LES_Filtering_module.f90
-!
-!   PURPOSE : Module for LES-filter the DNS data for turbulent channel flow.
-!
-!                                                             2016.12.07 K.Noh
-!
+!                                                                              !
+!   PROGRAM : LES_Filtering_module.f90                                         !
+!                                                                              !
+!   PURPOSE : Module for LES-filter the DNS data for turbulent channel flow.   !
+!                                                                              !
+!                                                             2016.12.07 K.Noh !
+!                                                                              !
 !------------------------------------------------------------------------------!
 
         MODULE LES_FILTERING_module
 
           IMPLICIT NONE
-          INTEGER :: N, Nx, Ny, Nz, Nx_fil, Nz_fil, VS_CASE, FILTER_OX, VS_ONLY,&
-                     Y_ORDER
+          INTEGER :: N, Nx, Ny, Nz, Nx_fil, Nz_fil,                             &
+                     VS_CASE, FILTER_OX, VS_ONLY, Y_ORDER
           REAL(KIND=8) :: Del,dx,dz,FW,pi,tol
           CHARACTER(LEN=65) :: file_name, dir_name, path_name
 

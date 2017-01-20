@@ -1,14 +1,14 @@
 !------------------------------------------------------------------------------!
-!
-!   PROGRAM : Vortical_Structure.f90
-!
-!   PURPOSE : Make the vortircal structures by using 3 methods
-!               (a) Q criteria
-!               (b) Lambda_2 criteria
-!               (c) Lambda_ci criteria
-!
-!                                                             2016.12.17 K.Noh
-!
+!                                                                              !
+!   PROGRAM : Vortical_Structure.f90                                           !
+!                                                                              !
+!   PURPOSE : Make the vortircal structures by using 3 methods                 !
+!               (a) Q criteria                                                 !
+!               (b) Lambda_2 criteria                                          !
+!               (c) Lambda_ci criteria                                         !
+!                                                                              !
+!                                                             2016.12.17 K.Noh !
+!                                                                              !
 !------------------------------------------------------------------------------!
 
         SUBROUTINE VORTICAL_STRUCTURE

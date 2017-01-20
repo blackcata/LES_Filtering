@@ -1,11 +1,11 @@
 !------------------------------------------------------------------------------!
-!
-!   PROGRAM : LES_Filtering_setup.f90
-!
-!   PURPOSE : Setup for LES-filter the DNS data for turbulent channel flow.
-!
-!                                                             2016.12.07 K.Noh
-!
+!                                                                              !
+!   PROGRAM : LES_Filtering_setup.f90                                          !
+!                                                                              !
+!   PURPOSE : Setup for LES-filter the DNS data for turbulent channel flow.    !
+!                                                                              !
+!                                                             2016.12.07 K.Noh !
+!                                                                              !
 !------------------------------------------------------------------------------!
 
         SUBROUTINE SETUP
@@ -28,8 +28,8 @@
             !------------------------------------------------------------------!
             !                  Make & Initialize Result folder                 !
             !------------------------------------------------------------------!
-            file_name = 'instantaneous_velocity_field_re644.plt'
-            ! file_name = 'INSU_XYZ.plt'
+            ! file_name = 'instantaneous_velocity_field_re644.plt'
+            file_name = 'INSU_XYZ.plt'
             dir_name  = 'RESULT'
 
             CALL SYSTEM('mkdir '//TRIM(dir_name))
@@ -61,7 +61,7 @@
             !   (c) Only Vortical Structure   : 2                              !
             !                                                                  !
             !------------------------------------------------------------------!
-            VS_ONLY = 1
+            VS_ONLY = 2
 
             !------------------------------------------------------------------!
             !                    Vortical Structure methods                    !
@@ -90,7 +90,7 @@
             !   (b) Descending Order : 1                                       !
             !                                                                  !
             !------------------------------------------------------------------!
-            Y_ORDER = 1
+            Y_ORDER = 0
 
             !------------------------------------------------------------------!
             !                       Statistic Slice Point                      !
@@ -106,9 +106,9 @@
             !------------------------------------------------------------------!
             !                    Constants for LES filtering                   !
             !------------------------------------------------------------------!
-            Nx = 288
-            Ny = 257
-            Nz = 288
+            Nx = 128
+            Ny = 191
+            Nz = 159
 
             FW = 4     ! Filter width constant
             tol = 1e-8 ! Tolerance for the number of nodes in x,z directions

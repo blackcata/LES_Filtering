@@ -1,13 +1,14 @@
 !------------------------------------------------------------------------------!
-!
-!   PROGRAM : LES_Filtering_output.f90
-!
-!   PURPOSE : Write each variables in the RESULT folder.
-!
-!                                                             2016.12.07 K.Noh
-!
+!                                                                              !
+!   PROGRAM : LES_Filtering_output.f90                                         !
+!                                                                              !
+!   PURPOSE : Write each variables in the RESULT folder.                       !
+!                                                                              !
+!                                                             2016.12.07 K.Noh !
+!                                                                              !
 !------------------------------------------------------------------------------!
           SUBROUTINE OUTPUT
+
               USE LES_FILTERING_module,                                         &
                   ONLY : J_det
 
@@ -166,10 +167,10 @@
                 WRITE(file_name,"(I3.3,A)")INT(YP(it)),'.S_T_slice.plt'
                 path_name = TRIM(dir_name)//'/'//TRIM(file_name)
                 OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
-                WRITE(100,*)'VARIABLES = X,Z,S_11,S_12,S_13,S_21,S_22,S_23'      &
-                                         //',S_31,S_32,S_33,S_Fil_11,S_Fil_12'   &
-                                         //',S_Fil_13,S_Fil_21,S_Fil_22,S_Fil_23'&
-                                         //',S_Fil_31,S_Fil_32,S_Fil_33,S'
+                WRITE(100,*)'VARIABLES = X,Z,S_11,S_12,S_13,S_21,S_22,S_23'     &
+                                        //',S_31,S_32,S_33,S_Fil_11,S_Fil_12'   &
+                                        //',S_Fil_13,S_Fil_21,S_Fil_22,S_Fil_23'&
+                                        //',S_Fil_31,S_Fil_32,S_Fil_33,S'
                 WRITE(100,"(2(A,I3,2X))")' ZONE  I = ',Nx,' K = ', Nz
 
                 J_loc = J_det(YP(it))
@@ -190,9 +191,9 @@
               file_name = '/S_T_averaged_profile.plt'
               path_name = TRIM(dir_name)//TRIM(file_name)
               OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
-              WRITE(100,*)'VARIABLES =  Y,S_11,S_12,S_13,S_21,S_22,S_23'      &
-                                       //',S_31,S_32,S_33,S_Fil_11,S_Fil_12'   &
-                                       //',S_Fil_13,S_Fil_21,S_Fil_22,S_Fil_23'&
+              WRITE(100,*)'VARIABLES =  Y,S_11,S_12,S_13,S_21,S_22,S_23'        &
+                                       //',S_31,S_32,S_33,S_Fil_11,S_Fil_12'    &
+                                       //',S_Fil_13,S_Fil_21,S_Fil_22,S_Fil_23' &
                                        //',S_Fil_31,S_Fil_32,S_Fil_33,S'
 
               DO j = 2,Ny-1
@@ -230,10 +231,10 @@
                 WRITE(file_name,"(I3.3,A)")INT(YP(it)),'.O_T_slice.plt'
                 path_name = TRIM(dir_name)//'/'//TRIM(file_name)
                 OPEN(100,FILE=path_name,FORM='FORMATTED',POSITION='APPEND')
-                WRITE(100,*)'VARIABLES = X,Z,O_11,O_12,O_13,O_21,O_22,O_23'      &
-                                         //',O_31,O_32,O_33,O_Fil_11,O_Fil_12'   &
-                                         //',O_Fil_13,O_Fil_21,O_Fil_22,O_Fil_23'&
-                                         //',O_Fil_31,O_Fil_32,O_Fil_33,O'
+                WRITE(100,*)'VARIABLES = X,Z,O_11,O_12,O_13,O_21,O_22,O_23'     &
+                                        //',O_31,O_32,O_33,O_Fil_11,O_Fil_12'   &
+                                        //',O_Fil_13,O_Fil_21,O_Fil_22,O_Fil_23'&
+                                        //',O_Fil_31,O_Fil_32,O_Fil_33,O'
                 WRITE(100,"(2(A,I3,2X))")' ZONE  I = ',Nx,' K = ', Nz
 
                 J_loc = J_det(YP(it))
